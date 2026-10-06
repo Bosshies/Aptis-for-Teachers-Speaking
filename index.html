@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aptis for Teachers — Speaking Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAF7F1;
+    --paper:#FFFFFF;
+    --ink:#221F2C;
+    --ink-soft:#655F70;
+    --accent:#2C1B54;
+    --accent-soft:#EEE9F8;
+    --teal:#3E7A70;
+    --teal-soft:#E7F1EE;
+    --warn:#B6512F;
+    --warn-soft:#F7E9E3;
+    --line:#E2D9C8;
+    --gold:#B58A3E;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.serif{font-family:'Source Serif 4',serif;}
+  .app{max-width:980px;margin:0 auto;padding:28px 20px 80px;}
+
+  /* ---------- top rail ---------- */
+  .railwrap{position:sticky;top:0;background:var(--bg);z-index:5;padding-top:6px;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:28px;}
+  .brand{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;}
+  .brand-name{font-size:13px;letter-spacing:.02em;color:var(--ink-soft);}
+  .brand-name b{color:var(--accent);}
+  .rail{display:flex;gap:0;}
+  .rail-step{flex:1;position:relative;padding-bottom:10px;}
+  .rail-step .bar{height:3px;background:var(--line);border-radius:0;}
+  .rail-step.done .bar{background:var(--teal);}
+  .rail-step.active .bar{background:var(--accent);}
+  .rail-step .lbl{font-size:11.5px;margin-top:6px;color:var(--ink-soft);font-weight:500;}
+  .rail-step.active .lbl{color:var(--accent);font-weight:700;}
+  .rail-step:not(:last-child){margin-right:8px;}
+
+  /* ---------- generic cards ---------- */
+  .card{background:var(--paper);border:1px solid var(--line);padding:26px;}
+  .eyebrow{font-size:13px;color:var(--ink-soft);margin-bottom:4px;}
+  .pagetitle{font-size:26px;margin:0 0 10px;}
+  .lede{color:var(--ink-soft);font-size:15px;max-width:62ch;}
+  .btn{
+    font-family:'Inter',sans-serif;font-weight:600;font-size:14.5px;
+    border:1px solid var(--accent);background:var(--accent);color:#fff;
+    padding:11px 22px;cursor:pointer;transition:opacity .15s ease;
+  }
+  .btn:hover{opacity:.88;}
+  .btn.secondary{background:transparent;color:var(--accent);}
+  .btn.ghost{background:transparent;color:var(--ink-soft);border-color:var(--line);}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .btnrow{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;}
+
+  /* ---------- landing ---------- */
+  .setgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:20px;}
+  @media (max-width:760px){.setgrid{grid-template-columns:1fr;}}
+  .setcard{border:1px solid var(--line);padding:18px;cursor:pointer;background:var(--paper);text-align:left;}
+  .setcard:hover{border-color:var(--accent);}
+  .setcard.picked{border-color:var(--accent);background:var(--accent-soft);}
+  .setcard h3{margin:0 0 6px;font-size:17px;}
+  .setcard p{margin:0;font-size:13.5px;color:var(--ink-soft);}
+  .structure{margin-top:26px;border-top:1px solid var(--line);padding-top:18px;}
+  .structure ol{padding-left:20px;margin:10px 0 0;}
+  .structure li{margin-bottom:6px;font-size:14.5px;}
+  .structure li b{color:var(--accent);}
+
+  /* ---------- exam layout ---------- */
+  .exam{display:grid;grid-template-columns:1fr 300px;gap:22px;align-items:start;}
+  @media (max-width:760px){.exam{grid-template-columns:1fr;}}
+  .prompt-pane{background:var(--paper);border:1px solid var(--line);padding:26px;min-height:280px;}
+  .kicker{font-size:13px;color:var(--ink-soft);margin-bottom:2px;}
+  .stepname{font-size:20px;margin:0 0 18px;}
+  .question-text{font-size:19px;font-family:'Source Serif 4',serif;line-height:1.45;margin:14px 0;}
+  .scene{width:100%;border:1px solid var(--line);background:#fff;margin:10px 0 14px;}
+  .scene-cap{font-size:13px;color:var(--ink-soft);margin-top:-6px;margin-bottom:12px;}
+  .compare-scenes{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .think-notes{width:100%;min-height:110px;border:1px solid var(--line);padding:12px;font-family:inherit;font-size:14px;resize:vertical;margin-top:10px;}
+  .subq-list{margin:12px 0 0;padding-left:20px;}
+  .subq-list li{font-size:15.5px;margin-bottom:6px;font-family:'Source Serif 4',serif;}
+
+  /* ---------- recorder panel ---------- */
+  .rec-panel{background:var(--paper);border:1px solid var(--line);padding:20px;text-align:center;position:sticky;top:98px;}
+  .rec-state{font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--ink-soft);margin-bottom:14px;}
+  .rec-state.live{color:var(--warn);}
+  .timer-ring{width:130px;height:130px;margin:0 auto 14px;border-radius:50%;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;position:relative;}
+  .timer-ring.live{border-color:var(--warn);}
+  .timer-num{font-size:30px;font-weight:700;color:var(--accent);}
+  .timer-ring.live .timer-num{color:var(--warn);}
+  .wave{height:24px;display:flex;align-items:center;justify-content:center;gap:2px;margin-bottom:10px;}
+  .wave span{width:3px;background:var(--warn);border-radius:2px;height:4px;transition:height .12s ease;}
+  .rec-hint{font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;min-height:16px;}
+  .rec-btnrow{display:flex;flex-direction:column;gap:8px;}
+  .btn.small{padding:8px 14px;font-size:13px;}
+  audio{width:100%;margin-top:10px;}
+  .mic-note{font-size:11.5px;color:var(--ink-soft);margin-top:12px;border-top:1px solid var(--line);padding-top:10px;}
+
+  /* ---------- review ---------- */
+  .review-item{border:1px solid var(--line);background:var(--paper);padding:20px;margin-bottom:16px;}
+  .review-q{font-family:'Source Serif 4',serif;font-size:17px;margin:0 0 10px;}
+  .review-audio{margin-bottom:14px;}
+  .model{background:var(--teal-soft);border-left:3px solid var(--teal);padding:14px 16px;margin-bottom:12px;}
+  .model .lbl{font-size:12px;font-weight:700;color:var(--teal);letter-spacing:.02em;margin-bottom:6px;}
+  .model p{margin:0;font-size:14.5px;font-family:'Source Serif 4',serif;font-style:italic;color:#233;}
+  .tips{margin:0;padding-left:18px;font-size:14px;}
+  .tips li{margin-bottom:5px;}
+  .vocab{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+  .vocab span{background:var(--accent-soft);color:var(--accent);font-size:12.5px;padding:3px 9px;font-weight:600;}
+  .criteria-note{background:var(--warn-soft);border-left:3px solid var(--gold);padding:12px 16px;font-size:13px;color:#4a3a20;margin-top:20px;}
+
+  /* ---------- summary ---------- */
+  .checklist{display:grid;gap:10px;margin-top:18px;}
+  .checkrow{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);padding:12px 14px;background:var(--paper);}
+  .checkrow input{margin-top:3px;}
+  .checkrow span{font-size:14.5px;}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F8F3E9"/><stop offset="1" stop-color="#E9E0CB"/>
+    </linearGradient>
+    <linearGradient id="woodGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#EAE1C9"/><stop offset="1" stop-color="#D6C7A3"/>
+    </linearGradient>
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#BFE1EE"/><stop offset="1" stop-color="#E7F3F6"/>
+    </linearGradient>
+    <linearGradient id="grassGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9CBE84"/><stop offset="1" stop-color="#7FA968"/>
+    </linearGradient>
+    <linearGradient id="boardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#33506E"/><stop offset="1" stop-color="#243B54"/>
+    </linearGradient>
+    <radialGradient id="shadowGrad" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<script>
+/* ============================= ILLUSTRATION HELPERS ============================= */
+function person(x,y,s,skin,shirt,hair){
+  hair = hair || "#3B2A20";
+  return `<g transform="translate(${x},${y}) scale(${s})">
+    <ellipse cx="0" cy="38" rx="15" ry="4.5" fill="url(#shadowGrad)"/>
+    <rect x="-13" y="12" width="7" height="20" rx="3.5" fill="${shirt}"/>
+    <rect x="6" y="12" width="7" height="20" rx="3.5" fill="${shirt}"/>
+    <path d="M-11,6 Q0,-1 11,6 L11,33 Q0,39 -11,33 Z" fill="${shirt}"/>
+    <circle cx="0" cy="-7" r="11.5" fill="${skin}"/>
+    <path d="M-11.5,-9 Q-12,-21 0,-21 Q12,-21 11.5,-9 Q9,-17 0,-17 Q-9,-17 -11.5,-9 Z" fill="${hair}"/>
+    <circle cx="-4.2" cy="-7" r="1.2" fill="#2B2320"/>
+    <circle cx="4.2" cy="-7" r="1.2" fill="#2B2320"/>
+    <path d="M-3,-2.5 Q0,-1 3,-2.5" stroke="#8a5a45" stroke-width="1" fill="none" stroke-linecap="round"/>
+  </g>`;
+}
+function desk(x,y,w,h,c){return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${c}"/>`;}
+function svgWrap(inner,vb="0 0 520 260"){return `<svg class="scene" viewBox="${vb}" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;}
+
+const SKINS=["#E3AE7D","#C98A5B","#8B5A3C","#F2C9A0"];
+const SHIRTS=["#2C1B54","#3E7A70","#B6512F","#B58A3E","#5B4B8A","#4C6E8C"];
+
+const ILLUS = {
+  schoolGroup: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <rect x="0" y="150" width="520" height="110" fill="#E6DFCB"/>
+    <rect x="30" y="30" width="460" height="130" fill="url(#woodGrad)"/>
+    <rect x="60" y="70" width="50" height="90" fill="#fff" stroke="#D8CDB4"/>
+    <rect x="150" y="70" width="50" height="90" fill="#fff" stroke="#D8CDB4"/>
+    ${person(230,190,1.5,SKINS[0],SHIRTS[0])}
+    ${person(275,195,1.4,SKINS[1],SHIRTS[1])}
+    ${person(318,192,1.5,SKINS[2],SHIRTS[2])}
+    ${person(360,196,1.3,SKINS[3],SHIRTS[3])}
+    ${person(400,190,1.5,SKINS[0],SHIRTS[4])}
+    <rect x="415" y="210" width="26" height="14" fill="${SHIRTS[5]}"/>
+  `),
+  lectureHall: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <rect x="20" y="30" width="480" height="30" fill="${SHIRTS[0]}"/>
+    ${[0,1,2,3,4,5].map(c=>`<rect x="${50+c*70}" y="90" width="50" height="16" fill="url(#woodGrad)" stroke="#D8CDB4"/>`).join('')}
+    ${[0,1,2,3,4,5].map(c=>`<rect x="${50+c*70}" y="150" width="50" height="16" fill="url(#woodGrad)" stroke="#D8CDB4"/>`).join('')}
+    ${[0,1,2,3,4,5].map((c,i)=>person(75+c*70,120,0.85,SKINS[i%4],SHIRTS[i%6])).join('')}
+    ${[0,1,2,3,4,5].map((c,i)=>person(75+c*70,180,0.85,SKINS[(i+1)%4],SHIRTS[(i+2)%6])).join('')}
+  `),
+  primaryClass: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <rect x="20" y="24" width="200" height="70" fill="${SHIRTS[1]}"/>
+    ${desk(60,150,80,40,"url(#woodGrad)")}
+    ${desk(200,150,80,40,"url(#woodGrad)")}
+    ${desk(340,150,80,40,"url(#woodGrad)")}
+    ${person(100,185,1.1,SKINS[0],SHIRTS[3])}
+    ${person(240,185,1.1,SKINS[1],SHIRTS[4])}
+    ${person(380,185,1.1,SKINS[3],SHIRTS[0])}
+    <circle cx="90" cy="195" r="6" fill="${SHIRTS[5]}"/>
+    <circle cx="230" cy="195" r="6" fill="${SHIRTS[2]}"/>
+  `),
+  colleaguesHelp: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <rect x="40" y="60" width="440" height="150" fill="#fff" stroke="#D8CDB4"/>
+    ${desk(120,150,280,40,"url(#woodGrad)")}
+    ${person(200,185,1.4,SKINS[0],SHIRTS[2])}
+    ${person(300,190,1.4,SKINS[1],SHIRTS[0])}
+    <rect x="180" y="160" width="60" height="6" fill="${SHIRTS[4]}"/>
+  `),
+  helpDesk: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${desk(70,140,150,40,"url(#woodGrad)")}
+    ${person(110,182,1.3,SKINS[2],SHIRTS[0])}
+    ${person(190,178,1.3,SKINS[0],SHIRTS[3])}
+    ${[0,1,2].map((c,i)=>person(320+c*55,190,0.9,SKINS[(i+2)%4],SHIRTS[(i+1)%6])).join('')}
+  `),
+  groupWork: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <circle cx="150" cy="150" r="70" fill="url(#woodGrad)"/>
+    <circle cx="380" cy="150" r="70" fill="url(#woodGrad)"/>
+    ${[0,1,2].map((c,i)=>person(120+c*35,170,0.95,SKINS[i%4],SHIRTS[i%6])).join('')}
+    ${[0,1,2].map((c,i)=>person(350+c*35,170,0.95,SKINS[(i+2)%4],SHIRTS[(i+3)%6])).join('')}
+  `),
+  examRoom: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${[0,1,2,3].map(r=>`<rect x="40" y="${50+r*45}" width="440" height="4" fill="#D8CDB4"/>`).join('')}
+    ${[0,1,2,3].map((r,i)=>desk(90+((i*2)%3)*140,60+r*45,60,28,"#fff")).join('')}
+    ${[0,1,2,3].map((r,i)=>person(120+((i*2)%3)*140,88+r*45,0.8,SKINS[i%4],SHIRTS[i%6])).join('')}
+  `),
+  techClass: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <rect x="150" y="40" width="220" height="120" fill="#2C2740"/>
+    <rect x="160" y="50" width="200" height="100" fill="#5B4B8A"/>
+    ${person(180,215,1.3,SKINS[0],SHIRTS[1])}
+    ${person(260,220,1.2,SKINS[1],SHIRTS[3])}
+    ${person(340,215,1.3,SKINS[3],SHIRTS[5])}
+  `),
+  labClass: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <rect x="20" y="20" width="480" height="26" fill="${SHIRTS[1]}"/>
+    ${desk(70,140,110,36,"url(#woodGrad)")}
+    ${desk(210,140,110,36,"url(#woodGrad)")}
+    ${desk(350,140,110,36,"url(#woodGrad)")}
+    <circle cx="100" cy="132" r="10" fill="none" stroke="${SHIRTS[4]}" stroke-width="3"/>
+    <circle cx="240" cy="132" r="10" fill="none" stroke="${SHIRTS[4]}" stroke-width="3"/>
+    <circle cx="380" cy="132" r="10" fill="none" stroke="${SHIRTS[4]}" stroke-width="3"/>
+    ${person(115,178,1.05,SKINS[0],SHIRTS[3])}
+    ${person(255,180,1.05,SKINS[1],SHIRTS[0])}
+    ${person(395,178,1.05,SKINS[2],SHIRTS[5])}
+    ${person(460,210,1.2,SKINS[3],SHIRTS[1])}
+  `),
+  artClass: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${desk(60,150,90,34,"url(#woodGrad)")}
+    ${desk(190,150,90,34,"url(#woodGrad)")}
+    ${desk(320,150,90,34,"url(#woodGrad)")}
+    <rect x="78" y="132" width="30" height="20" fill="${SHIRTS[2]}"/>
+    <rect x="208" y="132" width="30" height="20" fill="${SHIRTS[3]}"/>
+    <rect x="338" y="132" width="30" height="20" fill="${SHIRTS[4]}"/>
+    ${person(100,188,1.05,SKINS[1],SHIRTS[0])}
+    ${person(230,188,1.05,SKINS[0],SHIRTS[5])}
+    ${person(360,188,1.05,SKINS[2],SHIRTS[1])}
+    <rect x="420" y="60" width="70" height="90" fill="#fff" stroke="${SHIRTS[0]}" stroke-width="3"/>
+  `),
+  talkStudent: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${desk(260,160,90,30,"url(#woodGrad)")}
+    ${person(200,190,1.5,SKINS[0],SHIRTS[0])}
+    <g transform="translate(300,200) scale(1.2)">
+      <rect x="-11" y="6" width="22" height="26" rx="6" fill="${SHIRTS[3]}"/>
+      <circle cx="0" cy="-4" r="10" fill="${SKINS[2]}"/>
+    </g>
+  `),
+  feedbackClass: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${desk(190,150,150,36,"url(#woodGrad)")}
+    <rect x="245" y="128" width="34" height="24" fill="#fff" stroke="${SHIRTS[4]}" stroke-width="2"/>
+    ${person(215,175,1.35,SKINS[0],SHIRTS[0])}
+    ${person(320,190,1.15,SKINS[1],SHIRTS[3])}
+  `),
+  onlineHome: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <polygon points="260,30 160,110 360,110" fill="${SHIRTS[1]}"/>
+    <rect x="170" y="110" width="180" height="110" fill="#fff" stroke="#D8CDB4"/>
+    ${desk(210,188,100,32,"url(#woodGrad)")}
+    ${person(260,212,1.2,SKINS[2],SHIRTS[0])}
+    <rect x="234" y="176" width="52" height="14" fill="#2C2740"/>
+  `),
+  wholeClass: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <rect x="30" y="18" width="460" height="18" fill="${SHIRTS[0]}"/>
+    ${[0,1,2].map(r=>[0,1,2,3].map(c=>desk(58+c*112,68+r*58,56,22,"url(#woodGrad)")).join('')).join('')}
+    ${[0,1,2].map((r,ri)=>[0,1,2,3].map((c,ci)=>person(86+c*112,86+r*58,0.62,SKINS[(ri+ci)%4],SHIRTS[(ri+ci)%6])).join('')).join('')}
+  `),
+  parentMeeting: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${desk(190,150,140,34,"url(#woodGrad)")}
+    ${person(220,190,1.3,SKINS[0],SHIRTS[2])}
+    ${person(310,190,1.3,SKINS[3],SHIRTS[5])}
+  `),
+  readingCorner: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <rect x="0" y="200" width="520" height="60" fill="url(#woodGrad)"/>
+    ${[0,1,2].map((_,i)=>`<rect x="${140+i*90}" y="172" width="70" height="16" fill="url(#woodGrad)"/>`).join('')}
+    ${[0,1,2].map((_,i)=>person(175+i*90,186,0.92,SKINS[i%4],SHIRTS[(i+1)%6])).join('')}
+    <rect x="228" y="128" width="64" height="16" fill="url(#woodGrad)"/>
+    ${person(260,146,0.88,SKINS[2],SHIRTS[3])}
+    ${[0,1,2].map((_,i)=>`<rect x="${165+i*90}" y="188" width="18" height="13" fill="${SHIRTS[(i+3)%6]}"/>`).join('')}
+    <rect x="242" y="130" width="18" height="13" fill="${SHIRTS[4]}"/>
+  `),
+  chessGame: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${desk(190,150,140,34,"url(#woodGrad)")}
+    ${Array.from({length:4}).map((_,r)=>Array.from({length:4}).map((_,c)=>`<rect x="${205+c*27.5}" y="${137+r*9}" width="27.5" height="9" fill="${(r+c)%2===0?'#EFE7D2':'#B7A97E'}"/>`).join('')).join('')}
+    ${person(210,190,1.2,SKINS[0],SHIRTS[2])}
+    ${person(320,190,1.2,SKINS[3],SHIRTS[4])}
+  `),
+  footballGame: svgWrap(`
+    <rect width="520" height="170" fill="url(#skyGrad)"/>
+    <rect x="0" y="170" width="520" height="90" fill="url(#grassGrad)"/>
+    <rect x="415" y="105" width="8" height="70" fill="#fff"/>
+    <rect x="415" y="105" width="66" height="8" fill="#fff"/>
+    <rect x="473" y="105" width="8" height="70" fill="#fff"/>
+    ${person(110,205,1.15,SKINS[0],SHIRTS[0])}
+    ${person(195,212,1.1,SKINS[1],SHIRTS[3])}
+    ${person(275,206,1.15,SKINS[2],SHIRTS[5])}
+    <circle cx="225" cy="228" r="9" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  `),
+  mentorObserve: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <rect x="30" y="20" width="190" height="55" fill="url(#boardGrad)"/>
+    ${person(115,140,1.2,SKINS[0],SHIRTS[0])}
+    ${desk(270,150,70,26,"url(#woodGrad)")}
+    ${desk(360,150,70,26,"url(#woodGrad)")}
+    ${person(290,175,0.85,SKINS[1],SHIRTS[3])}
+    ${person(380,175,0.85,SKINS[2],SHIRTS[4])}
+    ${desk(410,192,80,28,"url(#woodGrad)")}
+    ${person(430,218,1.0,SKINS[3],SHIRTS[1])}
+    <rect x="447" y="200" width="18" height="24" fill="#fff" stroke="${SHIRTS[0]}" stroke-width="1.5"/>
+  `),
+  busExcursion: svgWrap(`
+    <rect width="520" height="170" fill="url(#skyGrad)"/>
+    <rect x="0" y="170" width="520" height="90" fill="url(#grassGrad)"/>
+    <rect x="60" y="90" width="300" height="100" rx="10" fill="${SHIRTS[0]}"/>
+    <rect x="82" y="106" width="48" height="38" fill="#BFE1EE"/>
+    <rect x="142" y="106" width="48" height="38" fill="#BFE1EE"/>
+    <rect x="202" y="106" width="48" height="38" fill="#BFE1EE"/>
+    <circle cx="110" cy="196" r="16" fill="#2B2320"/>
+    <circle cx="310" cy="196" r="16" fill="#2B2320"/>
+    ${person(400,205,1.1,SKINS[0],SHIRTS[2])}
+    ${person(440,212,1.0,SKINS[1],SHIRTS[3])}
+    ${person(470,206,1.1,SKINS[2],SHIRTS[4])}
+    <rect x="455" y="216" width="14" height="18" fill="${SHIRTS[5]}"/>
+  `),
+  artGallery: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <rect x="60" y="50" width="90" height="70" fill="#fff" stroke="${SHIRTS[0]}" stroke-width="4"/>
+    <rect x="190" y="50" width="90" height="70" fill="#fff" stroke="${SHIRTS[3]}" stroke-width="4"/>
+    <rect x="320" y="50" width="90" height="70" fill="#fff" stroke="${SHIRTS[4]}" stroke-width="4"/>
+    ${person(150,190,1.15,SKINS[0],SHIRTS[1])}
+    ${person(210,196,0.9,SKINS[1],SHIRTS[2])}
+    ${person(250,199,0.9,SKINS[2],SHIRTS[3])}
+    ${person(290,194,0.9,SKINS[3],SHIRTS[4])}
+  `),
+  startSchool: svgWrap(`
+    <rect width="520" height="260" fill="url(#skyGrad)"/>
+    <rect x="0" y="190" width="520" height="70" fill="url(#grassGrad)"/>
+    <rect x="330" y="60" width="150" height="130" fill="${SHIRTS[0]}"/>
+    <rect x="360" y="90" width="30" height="40" fill="#BFE1EE"/>
+    <rect x="410" y="90" width="30" height="40" fill="#BFE1EE"/>
+    <rect x="385" y="150" width="40" height="40" fill="${SHIRTS[4]}"/>
+    ${person(150,210,1.3,SKINS[2],SHIRTS[3])}
+    ${person(190,225,0.85,SKINS[0],SHIRTS[5])}
+  `),
+  boardWriting: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <rect x="30" y="20" width="200" height="60" fill="url(#boardGrad)"/>
+    <rect x="50" y="35" width="120" height="4" fill="#fff"/>
+    <rect x="50" y="48" width="90" height="4" fill="#fff"/>
+    ${person(140,150,1.1,SKINS[0],SHIRTS[0])}
+    ${desk(280,150,70,26,"url(#woodGrad)")}
+    ${desk(370,150,70,26,"url(#woodGrad)")}
+    ${person(300,175,0.85,SKINS[1],SHIRTS[3])}
+    ${person(390,175,0.85,SKINS[2],SHIRTS[4])}
+  `),
+  studentsPhones: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${desk(80,150,110,34,"url(#woodGrad)")}
+    ${desk(220,150,110,34,"url(#woodGrad)")}
+    ${desk(360,150,110,34,"url(#woodGrad)")}
+    ${person(125,188,1.05,SKINS[0],SHIRTS[2])}
+    ${person(265,188,1.05,SKINS[1],SHIRTS[0])}
+    ${person(405,188,1.05,SKINS[2],SHIRTS[4])}
+    <rect x="110" y="160" width="16" height="24" fill="#2C2740"/>
+    <rect x="250" y="160" width="16" height="24" fill="#2C2740"/>
+    <rect x="390" y="160" width="16" height="24" fill="#2C2740"/>
+  `),
+  studentsBooks: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${desk(80,150,110,34,"url(#woodGrad)")}
+    ${desk(220,150,110,34,"url(#woodGrad)")}
+    ${desk(360,150,110,34,"url(#woodGrad)")}
+    ${person(125,188,1.05,SKINS[3],SHIRTS[1])}
+    ${person(265,188,1.05,SKINS[0],SHIRTS[3])}
+    ${person(405,188,1.05,SKINS[1],SHIRTS[5])}
+    <rect x="108" y="158" width="22" height="16" fill="${SHIRTS[2]}"/>
+    <rect x="248" y="158" width="22" height="16" fill="${SHIRTS[4]}"/>
+    <rect x="388" y="158" width="22" height="16" fill="${SHIRTS[0]}"/>
+  `),
+  ecoLesson: svgWrap(`
+    <rect width="520" height="170" fill="url(#skyGrad)"/>
+    <rect x="0" y="170" width="520" height="90" fill="url(#grassGrad)"/>
+    <rect x="250" y="150" width="8" height="50" fill="#6b4a2e"/>
+    <circle cx="254" cy="145" r="26" fill="#7FA968"/>
+    ${person(180,205,1.1,SKINS[0],SHIRTS[0])}
+    ${person(330,205,1.1,SKINS[1],SHIRTS[3])}
+    <rect x="400" y="180" width="26" height="34" fill="${SHIRTS[4]}"/>
+    <rect x="440" y="180" width="26" height="34" fill="${SHIRTS[5]}"/>
+  `),
+  assembly: svgWrap(`
+    <rect width="520" height="260" fill="url(#skyGrad)"/>
+    <rect x="0" y="190" width="520" height="70" fill="url(#grassGrad)"/>
+    <rect x="20" y="60" width="10" height="130" fill="#8a5a3c"/>
+    <rect x="30" y="60" width="60" height="40" fill="#B6512F"/>
+    ${[0,1,2,3,4].map((c,i)=>person(140+c*70,210,0.85,SKINS[i%4],SHIRTS[1])).join('')}
+    ${[0,1,2,3,4].map((c,i)=>person(140+c*70,190,0.75,SKINS[(i+1)%4],SHIRTS[1])).join('')}
+  `),
+  oldClassroom: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <rect x="30" y="18" width="460" height="18" fill="${SHIRTS[0]}"/>
+    ${[0,1,2].map(r=>[0,1,2,3].map(c=>desk(58+c*112,68+r*58,56,22,"url(#woodGrad)")).join('')).join('')}
+    ${[0,1,2].map((r)=>[0,1,2,3].map((c)=>person(86+c*112,86+r*58,0.6,SKINS[0],SHIRTS[1])).join('')).join('')}
+  `),
+  modernClassroom: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <ellipse cx="150" cy="170" rx="70" ry="30" fill="url(#woodGrad)"/>
+    <ellipse cx="380" cy="170" rx="70" ry="30" fill="url(#woodGrad)"/>
+    ${[0,1,2].map((c,i)=>person(120+c*35,190,0.9,SKINS[i%4],SHIRTS[(i+2)%6])).join('')}
+    ${[0,1,2].map((c,i)=>person(350+c*35,190,0.9,SKINS[(i+1)%4],SHIRTS[(i+4)%6])).join('')}
+  `),
+  studyNight: svgWrap(`
+    <rect width="520" height="260" fill="#2C2740"/>
+    <circle cx="440" cy="60" r="22" fill="#F3EFE6"/>
+    ${desk(190,180,140,32,"url(#woodGrad)")}
+    ${person(260,215,1.2,SKINS[2],SHIRTS[0])}
+    <rect x="330" y="160" width="14" height="24" fill="#F7D97A"/>
+    <rect x="228" y="168" width="26" height="14" fill="${SHIRTS[3]}"/>
+  `),
+  staffMeeting: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <ellipse cx="260" cy="170" rx="150" ry="45" fill="url(#woodGrad)"/>
+    ${person(140,150,0.95,SKINS[0],SHIRTS[0])}
+    ${person(220,140,0.95,SKINS[1],SHIRTS[2])}
+    ${person(300,140,0.95,SKINS[2],SHIRTS[3])}
+    ${person(380,150,0.95,SKINS[3],SHIRTS[4])}
+    ${person(260,195,0.95,SKINS[1],SHIRTS[5])}
+  `),
+  citySchool: svgWrap(`
+    <rect width="520" height="260" fill="url(#skyGrad)"/>
+    <rect x="0" y="220" width="520" height="40" fill="url(#grassGrad)"/>
+    <rect x="160" y="40" width="200" height="180" fill="${SHIRTS[0]}"/>
+    ${Array.from({length:4}).map((_,r)=>Array.from({length:3}).map((_,c)=>`<rect x="${180+c*55}" y="${60+r*35}" width="35" height="22" fill="#BFE1EE"/>`).join('')).join('')}
+    ${person(410,235,1.0,SKINS[0],SHIRTS[3])}
+    ${person(450,238,0.95,SKINS[1],SHIRTS[4])}
+  `),
+  ruralSchool: svgWrap(`
+    <rect width="520" height="260" fill="url(#skyGrad)"/>
+    <rect x="0" y="190" width="520" height="70" fill="url(#grassGrad)"/>
+    <rect x="150" y="120" width="200" height="80" fill="${SHIRTS[1]}"/>
+    <polygon points="150,120 250,80 350,120" fill="${SHIRTS[4]}"/>
+    <rect x="230" y="150" width="40" height="50" fill="${SHIRTS[3]}"/>
+    <circle cx="60" cy="205" r="22" fill="#7FA968"/>
+    <circle cx="460" cy="200" r="26" fill="#7FA968"/>
+    ${person(300,215,1.0,SKINS[2],SHIRTS[0])}
+  `),
+  lonelyStudent: svgWrap(`
+    <rect width="520" height="260" fill="url(#skyGrad)"/>
+    <rect x="0" y="190" width="520" height="70" fill="url(#grassGrad)"/>
+    ${desk(90,175,70,20,"url(#woodGrad)")}
+    ${person(120,205,1.15,SKINS[0],SHIRTS[3])}
+    ${person(360,215,0.85,SKINS[1],SHIRTS[0])}
+    ${person(400,212,0.85,SKINS[2],SHIRTS[4])}
+    ${person(430,216,0.85,SKINS[3],SHIRTS[5])}
+  `),
+  examHall: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <circle cx="460" cy="40" r="18" fill="#fff" stroke="${SHIRTS[0]}" stroke-width="2"/>
+    ${[0,1].map(r=>[0,1,2].map(c=>desk(80+c*160,90+r*80,60,26,"url(#woodGrad)")).join('')).join('')}
+    ${[0,1].map((r)=>[0,1,2].map((c,i)=>person(110+c*160,112+r*80,0.85,SKINS[i%4],SHIRTS[i%6])).join('')).join('')}
+  `),
+  textbookLesson: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${desk(190,160,140,32,"url(#woodGrad)")}
+    <rect x="225" y="140" width="70" height="26" fill="#fff" stroke="${SHIRTS[0]}" stroke-width="2"/>
+    ${person(260,195,1.2,SKINS[0],SHIRTS[2])}
+  `),
+  mediaLesson: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${desk(190,160,140,32,"url(#woodGrad)")}
+    <rect x="230" y="138" width="60" height="34" fill="#2C2740"/>
+    ${person(260,195,1.2,SKINS[1],SHIRTS[4])}
+    <path d="M232,182 Q260,205 288,182" stroke="${SHIRTS[0]}" stroke-width="4" fill="none"/>
+  `),
+  futurePlans: svgWrap(`
+    <rect width="520" height="170" fill="url(#skyGrad)"/>
+    <rect x="0" y="170" width="520" height="90" fill="url(#grassGrad)"/>
+    <path d="M260,260 L260,190 Q260,170 200,150" stroke="#D8CDB0" stroke-width="18" fill="none"/>
+    <path d="M260,190 Q260,170 340,140" stroke="#D8CDB0" stroke-width="18" fill="none"/>
+    ${person(260,225,1.3,SKINS[2],SHIRTS[0])}
+    <circle cx="440" cy="70" r="30" fill="#F7D97A"/>
+  `),
+  mixedAbility: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${desk(50,150,120,36,"url(#woodGrad)")}
+    ${desk(230,150,120,36,"url(#woodGrad)")}
+    ${desk(390,150,100,36,"url(#woodGrad)")}
+    ${person(90,192,0.95,SKINS[0],SHIRTS[2])}
+    ${person(150,192,0.95,SKINS[1],SHIRTS[3])}
+    ${person(270,188,1.2,SKINS[2],SHIRTS[0])}
+    ${person(320,192,0.95,SKINS[3],SHIRTS[4])}
+    ${person(420,192,0.95,SKINS[0],SHIRTS[5])}
+    ${person(460,192,0.95,SKINS[1],SHIRTS[1])}
+  `),
+  stationsLearning: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${desk(50,80,100,32,"url(#woodGrad)")}
+    ${desk(210,80,100,32,"url(#woodGrad)")}
+    ${desk(370,80,100,32,"url(#woodGrad)")}
+    ${desk(130,180,100,32,"url(#woodGrad)")}
+    ${desk(290,180,100,32,"url(#woodGrad)")}
+    ${person(80,113,0.8,SKINS[0],SHIRTS[2])}
+    ${person(115,113,0.8,SKINS[1],SHIRTS[3])}
+    ${person(240,113,0.8,SKINS[2],SHIRTS[4])}
+    ${person(400,113,0.8,SKINS[3],SHIRTS[5])}
+    ${person(160,213,0.8,SKINS[0],SHIRTS[1])}
+    ${person(320,213,0.8,SKINS[1],SHIRTS[0])}
+  `),
+  oneToOneSupport: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${desk(60,150,70,26,"url(#woodGrad)")}
+    ${desk(230,160,100,32,"url(#woodGrad)")}
+    ${desk(400,150,70,26,"url(#woodGrad)")}
+    ${person(90,180,0.8,SKINS[2],SHIRTS[4])}
+    ${person(430,180,0.8,SKINS[3],SHIRTS[5])}
+    ${person(260,195,1.05,SKINS[0],SHIRTS[2])}
+    ${person(195,185,1.3,SKINS[1],SHIRTS[0])}
+  `),
+  outdoorLesson: svgWrap(`
+    <rect width="520" height="170" fill="url(#skyGrad)"/>
+    <rect x="0" y="170" width="520" height="90" fill="url(#grassGrad)"/>
+    <rect x="380" y="40" width="20" height="120" fill="#8A6A45"/>
+    <circle cx="390" cy="55" r="55" fill="${SHIRTS[1]}"/>
+    ${person(230,210,1.2,SKINS[0],SHIRTS[0])}
+    ${person(150,225,0.85,SKINS[1],SHIRTS[3])}
+    ${person(190,228,0.85,SKINS[2],SHIRTS[4])}
+    ${person(280,226,0.85,SKINS[3],SHIRTS[5])}
+  `),
+  gameBasedLesson: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    ${desk(190,150,150,34,"url(#woodGrad)")}
+    <rect x="210" y="138" width="110" height="10" fill="${SHIRTS[4]}"/>
+    ${person(210,192,1.15,SKINS[0],SHIRTS[2])}
+    ${person(320,192,1.15,SKINS[2],SHIRTS[3])}
+  `),
+  proudMoment: svgWrap(`
+    <rect width="520" height="260" fill="url(#wallGrad)"/>
+    <rect x="180" y="150" width="200" height="20" fill="${SHIRTS[0]}"/>
+    ${person(210,185,0.9,SKINS[0],SHIRTS[1])}
+    ${person(270,185,0.9,SKINS[1],SHIRTS[2])}
+    ${person(330,185,0.9,SKINS[2],SHIRTS[4])}
+    ${person(100,200,1.2,SKINS[3],SHIRTS[5])}
+  `),
+};
+
+
+/* ============================= TEST DATA ============================= */
+const SETS = {
+A:{
+  label:"ชุดที่ 1",
+  tag:"ใกล้เคียงข้อสอบตัวอย่างในไฟล์ของคุณ",
+  parts:[
+  { title:"Part One", kind:"personal",
+    instruction:"ผู้คุมสอบจะถามคำถามสั้น ๆ เกี่ยวกับตัวคุณ 3 ข้อ — ข้อละ 30 วินาที เริ่มพูดทันทีที่ได้ยินสัญญาณ",
+    items:[
+      {time:30, q:"Please tell me about your first day as a teacher.",
+       model:"My first day was in a small primary school. I felt very nervous, but the students were welcoming and one boy gave me a drawing. By the end of the day I felt much more confident about my choice to become a teacher.",
+       tips:["ใช้ Past Simple เล่าเหตุการณ์ (felt, gave, became)","เล่าเป็นลำดับเวลา: ก่อน–ระหว่าง–หลัง เพื่อให้มี discourse ชัดเจน","จบด้วยความรู้สึกหรือข้อสรุป ไม่ใช่แค่บรรยายข้อเท็จจริง"],
+       vocab:["nervous","welcoming","confident","settle in"]},
+      {time:30, q:"Tell me about your favourite course book or teaching material.",
+       model:"I really like using picture-based story books with young learners because they hold attention and make vocabulary easy to remember. My students especially enjoy books with repeated phrases, since they can join in and build confidence speaking together.",
+       tips:["ให้เหตุผลประกอบ (because...) ทุกครั้งที่บอกความชอบ","ยกตัวอย่างเฉพาะเจาะจง (picture-based story books) ดีกว่าพูดกว้าง ๆ","เชื่อมประโยคด้วย since / so เพื่อความลื่นไหล"],
+       vocab:["hold attention","repeated phrases","build confidence"]},
+      {time:30, q:"Please tell me about the subjects you teach.",
+       model:"I mainly teach English to teenagers, focusing on speaking and listening skills. I also help with exam preparation classes, which I enjoy because I can see clear progress in my students over just a few months.",
+       tips:["บอกวิชาหลัก + กลุ่มผู้เรียน + จุดเน้นการสอน","ใช้ present simple เมื่อพูดถึงสิ่งที่ทำเป็นประจำ","เติมความรู้สึก/เหตุผลท้ายประโยคเพื่อยืดคำตอบให้ครบเวลา"],
+       vocab:["focus on","exam preparation","clear progress"]}
+    ]},
+  { title:"Part Two", kind:"single", image:"schoolGroup",
+    instruction:"บรรยายภาพ 1 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    caption:"A teacher standing outside a school with a small group of students.",
+    items:[
+      {time:45, q:"Describe this picture.",
+       model:"In this picture, I can see a teacher standing with five students outside what looks like a school building. The students are carrying backpacks, so it might be the start or end of the school day. Everyone looks relaxed and friendly, and the teacher seems to be supervising them before they go home.",
+       tips:["บรรยายจากภาพรวมก่อน แล้วค่อยลงรายละเอียด (people → clothes/objects → mood)","ใช้ present continuous สำหรับสิ่งที่กำลังเกิดขึ้นในภาพ (is standing, are carrying)","ใช้ 'might be / seems to be' เมื่อเดาสิ่งที่ไม่แน่ใจ 100%"],
+       vocab:["backpack","supervise","relaxed"]},
+      {time:45, q:"What organised activities can children do away from the classroom in your country?",
+       model:"In my country, schools often organise field trips to museums, science centres or historical sites. There are also sports days, nature camps and community service projects. These activities let children apply what they've learned in a real-world setting, which I think is very valuable.",
+       tips:["ยกตัวอย่างหลายอย่าง (field trips, sports days, camps) เพื่อแสดง vocabulary range","อธิบายว่าทำไมกิจกรรมเหล่านี้มีประโยชน์ ไม่ใช่แค่ลิสต์รายการ","ใช้ 'which I think...' เพื่อแทรกความเห็นส่วนตัว"],
+       vocab:["field trip","nature camp","real-world setting"]},
+      {time:45, q:"What can students learn outside of the classroom?",
+       model:"Outside the classroom, students can develop teamwork and communication skills that are hard to practise sitting at a desk. They also learn practical, hands-on knowledge — for example, observing plants on a nature walk teaches science far more memorably than a textbook page.",
+       tips:["เปรียบเทียบการเรียนในห้อง vs นอกห้อง เพื่อให้คำตอบมีมิติ","ใช้ตัวอย่างเฉพาะ (nature walk) แทนการพูดลอย ๆ","ปิดท้ายด้วยเหตุผลว่าทำไมสิ่งนี้ 'ดีกว่า' หรือ 'สำคัญ'"],
+       vocab:["hands-on","memorable","teamwork"]}
+    ]},
+  { title:"Part Three", kind:"compare", images:["lectureHall","primaryClass"],
+    instruction:"เปรียบเทียบภาพ 2 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    captionA:"A large university lecture hall full of students.",
+    captionB:"A small primary school classroom with three young pupils.",
+    items:[
+      {time:45, q:"Tell me what you see in the two pictures.",
+       model:"The first picture shows a large lecture hall with many university students sitting in rows, taking notes. The second picture shows a much smaller primary classroom with just a few young children sitting close together at their desks. The contrast in class size and the age of the learners is very clear.",
+       tips:["ใช้โครงสร้าง 'The first picture shows... The second picture shows...' เพื่อเปรียบเทียบชัดเจน","เน้น contrast คำสำคัญ เช่น large vs small, many vs few","จบด้วยประโยคสรุปความแตกต่างโดยรวม"],
+       vocab:["in rows","contrast","close together"]},
+      {time:45, q:"Describe what it would be like to teach in one of these two classes.",
+       model:"I think teaching the small primary class would let me give each child more individual attention and build a closer relationship with them. In the large lecture hall, though, it would be harder to check everyone's understanding, so I would need to rely more on written feedback and group activities.",
+       tips:["เลือกฝั่งใดฝั่งหนึ่งชัดเจน แล้วอธิบายเหตุผล","ใช้ conditional (would let me, would need to) เพราะเป็นสถานการณ์สมมติ","เปรียบเทียบข้อดี-ข้อจำกัดของอีกฝั่งด้วยเล็กน้อยเพื่อความสมดุล"],
+       vocab:["individual attention","rely on","written feedback"]},
+      {time:45, q:"How important is it to keep class sizes below 30 students per class?",
+       model:"I believe it's fairly important, especially for language learning, because smaller classes give students more chances to speak and get personalised feedback. That said, with good classroom management and pair work, larger classes can still be effective, so it isn't the only factor that matters.",
+       tips:["ให้ความเห็นชัดเจนตั้งแต่ต้นประโยค (I believe / In my opinion)","เพิ่มมุมมองที่สอง (that said...) เพื่อแสดงว่าเห็นหลายด้าน — คะแนน Discourse Management จะดีขึ้น","หลีกเลี่ยงคำตอบสั้นเกินไป เติมเหตุผลรองรับเสมอ"],
+       vocab:["personalised feedback","classroom management","pair work"]}
+    ]},
+  { title:"Part Four", kind:"extended", image:"colleaguesHelp", prepTime:60, answerTime:120,
+    instruction:"ดูภาพและอ่านคำถาม 3 ข้อ มีเวลาเตรียมตัว 1 นาที (จดโน้ตได้) จากนั้นตอบทั้ง 3 ข้อต่อเนื่องภายใน 2 นาที",
+    caption:"Two colleagues smiling and helping each other with work.",
+    subquestions:[
+      "Talk about the last time you gave help to or were given help by another teacher.",
+      "How do you feel about being observed by a colleague or manager?",
+      "How important is colleagues' advice in the training of teachers?"
+    ],
+    model:"Last month, a colleague helped me plan a lesson on persuasive writing — she shared some excellent example texts I hadn't thought of using. As for being observed, I used to feel quite anxious about it, but now I see it as a useful chance to get honest feedback and improve. Overall, I think colleagues' advice is extremely important in teacher training, because experienced teachers often share practical tips that you simply can't learn from a textbook, like how to manage a difficult class or save time on marking.",
+    tips:["จัดสรรเวลา 1 นาทีเตรียม: จดคำสำคัญ 1-2 คำต่อคำถาม ไม่ต้องเขียนประโยคเต็ม","ตอบตามลำดับคำถามที่ให้มา และใช้คำเชื่อมระหว่างข้อ เช่น 'As for...', 'Overall...' เพื่อให้ผู้ฟังตามทัน","แบ่งเวลาพูดให้ใกล้เคียงกันทั้ง 3 ข้อ อย่าใช้เวลาหมดกับข้อแรก","ถ้าตอบไม่ทันข้อสุดท้าย ให้สรุปสั้น ๆ ดีกว่าเงียบไปเลย"],
+    vocab:["persuasive writing","anxious","honest feedback","practical tips"]}
+  ]},
+B:{
+  label:"ชุดที่ 2",
+  tag:"หัวข้อใหม่ ฝึกเพิ่มความหลากหลาย",
+  parts:[
+  { title:"Part One", kind:"personal",
+    instruction:"ผู้คุมสอบจะถามคำถามสั้น ๆ เกี่ยวกับตัวคุณ 3 ข้อ — ข้อละ 30 วินาที",
+    items:[
+      {time:30, q:"What made you decide to become a teacher?",
+       model:"I decided to become a teacher because I had an inspiring English teacher myself who made learning enjoyable. I wanted to give other students that same positive experience, and I also love the idea of helping people grow their confidence over time.",
+       tips:["เล่าเหตุผลส่วนตัวสั้น ๆ ก่อน แล้วขยายด้วยสิ่งที่อยากทำต่อ","ใช้ 'I wanted to...' แสดงแรงจูงใจ","เชื่อม 2 ประโยคด้วย and / also เพื่อไม่ให้คำตอบสั้นเกิน"],
+       vocab:["inspiring","enjoyable","grow confidence"]},
+      {time:30, q:"Tell me about a lesson you really enjoyed teaching.",
+       model:"I once taught a lesson on describing photos using students' own holiday pictures. They were so motivated to talk because the topic was personal to them, and the classroom was full of energy — probably one of my favourite lessons ever.",
+       tips:["ระบุหัวข้อบทเรียนให้ชัดเจนตั้งแต่ต้น","อธิบายว่าทำไมมันสนุก/ได้ผล ไม่ใช่แค่บอกว่า 'it was fun'","ใช้ Past Simple ตลอดเพราะเป็นเหตุการณ์ที่จบไปแล้ว"],
+       vocab:["motivated","full of energy","personal topic"]},
+      {time:30, q:"How do you usually prepare for your lessons?",
+       model:"I usually start by checking the learning objective, then I choose activities that match my students' level. I also try to prepare a back-up activity in case something finishes early, since that happens quite often with mixed-level classes.",
+       tips:["ใช้ sequencing words: first/usually...then...also... เพื่อเรียงลำดับขั้นตอน","ยกตัวอย่างสถานการณ์จริง (back-up activity) เพิ่มความน่าเชื่อถือ","present simple ตลอดเพราะพูดถึงกิจวัตร"],
+       vocab:["learning objective","match the level","back-up activity"]}
+    ]},
+  { title:"Part Two", kind:"single", image:"helpDesk",
+    instruction:"บรรยายภาพ 1 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    caption:"A teacher helping one student at a desk while other students work nearby.",
+    items:[
+      {time:45, q:"Describe this picture.",
+       model:"In the picture, a teacher is leaning over a desk to help one student with their work, while a few other students continue working independently in the background. It looks like a calm, focused classroom, and the teacher seems patient and approachable.",
+       tips:["บรรยายฉากหลักก่อน (teacher + student) แล้วค่อยขยายไปฉากรอง (background)","ใช้ present continuous สำหรับ action ที่กำลังเกิดขึ้น","เดาบรรยากาศ/อารมณ์ด้วย 'seems / looks like'"],
+       vocab:["lean over","independently","approachable"]},
+      {time:45, q:"What kind of activities help students learn new vocabulary?",
+       model:"Games like matching words to pictures work really well, especially for younger learners. I also find that using new words in short personal sentences helps students remember them, because it connects the vocabulary to something meaningful in their own lives.",
+       tips:["เปิดด้วยตัวอย่างกิจกรรมเฉพาะเจาะจง ไม่ใช่คำตอบกว้าง ๆ ว่า 'games'","อธิบายกลไกว่าทำไมกิจกรรมนั้นได้ผล (connects to something meaningful)","ใช้ 'especially for...' เพื่อจำกัดขอบเขตคำตอบให้ชัดเจน"],
+       vocab:["matching","meaningful","connect to"]},
+      {time:45, q:"How can teachers support students who are struggling with a subject?",
+       model:"I think breaking tasks into smaller, manageable steps really helps struggling students feel less overwhelmed. One-to-one check-ins are also valuable, since they give the teacher a chance to identify exactly where the misunderstanding is coming from.",
+       tips:["ให้คำตอบ 2 แนวทางเพื่อความครบถ้วน (breaking tasks + one-to-one check-ins)","ใช้ 'feel less overwhelmed' แสดงความเข้าใจด้านความรู้สึกผู้เรียน","จบด้วยเหตุผลเชิงลึกว่าทำไมวิธีนี้ได้ผล"],
+       vocab:["manageable steps","overwhelmed","one-to-one"]}
+    ]},
+  { title:"Part Three", kind:"compare", images:["groupWork","examRoom"],
+    instruction:"เปรียบเทียบภาพ 2 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    captionA:"Students working together in small circles.",
+    captionB:"Students sitting individually, working quietly at separate desks.",
+    items:[
+      {time:45, q:"Tell me what you see in the two pictures.",
+       model:"The first picture shows students working together in small groups, talking and sharing ideas. The second picture shows students sitting alone at separate desks, working quietly and individually. The atmosphere in the two pictures feels quite different — one is collaborative and the other is more like an exam setting.",
+       tips:["ใช้ parallel structure ในการบรรยายสองภาพ (The first... The second...)","เพิ่มคำอธิบาย 'atmosphere' เพื่อเปรียบเทียบในเชิงบรรยากาศ ไม่ใช่แค่ข้อเท็จจริง","ใช้คำคู่ตรงข้าม เช่น collaborative vs individual"],
+       vocab:["collaborative","atmosphere","quietly"]},
+      {time:45, q:"Describe what it would be like to teach a lesson using one of these two approaches.",
+       model:"Teaching a group-work lesson would mean spending more time monitoring different groups and managing noise levels, but it would also let quieter students practise speaking in a smaller, safer setting. It would probably be a livelier, more energetic lesson overall.",
+       tips:["เลือกฝั่งหนึ่งแล้วอธิบายทั้งข้อดีและความท้าทาย","ใช้ 'would mean / would let / would probably' เพราะเป็นสถานการณ์สมมติ","ปิดท้ายด้วยภาพรวมบรรยากาศของห้องเรียน"],
+       vocab:["monitor","noise levels","safer setting"]},
+      {time:45, q:"How important is group work compared to independent study for language learners?",
+       model:"I'd say both are important but for different reasons. Group work builds speaking confidence and real communication skills, while independent study allows learners to focus deeply and consolidate grammar or vocabulary at their own pace. A good course usually needs a balance of the two.",
+       tips:["แสดงความเห็นแบบสมดุล (both...but for different reasons) แทนการเลือกข้างเดียว","ใช้ 'while' เชื่อมสองความคิดที่ตรงข้ามกันในประโยคเดียว","ปิดท้ายด้วยข้อสรุปที่แสดงวิจารณญาณของครู (a good course needs a balance)"],
+       vocab:["consolidate","at their own pace","balance"]}
+    ]},
+  { title:"Part Four", kind:"extended", image:"techClass", prepTime:60, answerTime:120,
+    instruction:"ดูภาพและอ่านคำถาม 3 ข้อ มีเวลาเตรียมตัว 1 นาที (จดโน้ตได้) จากนั้นตอบทั้ง 3 ข้อต่อเนื่องภายใน 2 นาที",
+    caption:"A teacher using technology with students in the classroom.",
+    subquestions:[
+      "Talk about the last time you used technology in your teaching.",
+      "How do you feel about using new technology in the classroom?",
+      "How important is technology training for teachers today?"
+    ],
+    model:"Last week, I used an interactive quiz app to review vocabulary at the end of a lesson, and the students were much more engaged than with a normal worksheet. Generally, I feel positive about new technology — it can make lessons more interactive, although it does take extra time to prepare and sometimes things don't work as planned, like a slow internet connection. Because of this, I think technology training for teachers is very important nowadays, since knowing how to use these tools confidently, and having a backup plan when they fail, really affects how smoothly a lesson runs.",
+    tips:["เริ่มด้วยเหตุการณ์เฉพาะเจาะจง (Last week...) ก่อนค่อยขยายไปความเห็นทั่วไป","ยอมรับข้อจำกัด (doesn't work as planned) แสดงว่ามองสมดุลสองด้าน ไม่ใช่ชมอย่างเดียว","ใช้ 'Because of this...' เชื่อมข้อ 2 กับข้อ 3 ให้เป็นเนื้อเดียวกัน","เตรียม backup plan เสมอในการพูดข้อสุดท้ายเผื่อเวลาไม่พอ"],
+    vocab:["engaged","interactive","backup plan","run smoothly"]}
+  ]},
+C:{
+  label:"ชุดที่ 3",
+  tag:"ตัวอย่างคำตอบอิงบริบทโรงเรียนมัธยมประจำตำบลของคุณ",
+  parts:[
+  { title:"Part One", kind:"personal",
+    instruction:"ผู้คุมสอบจะถามคำถามสั้น ๆ เกี่ยวกับตัวคุณ 3 ข้อ — ข้อละ 30 วินาที",
+    items:[
+      {time:30, q:"Please tell me about the school where you teach.",
+       model:"I teach at a small secondary school in a sub-district, with students from Mattayom 1 to 6. We only have around eighteen teachers in total, so we don't have someone for every subject area — for example, there are four science teachers, including me, but some other subjects aren't fully covered.",
+       tips:["ใส่ตัวเลขจริง (18 คน, 4 คน) ทำให้คำตอบเฉพาะเจาะจงและน่าเชื่อถือ — ช่วยเรื่อง Vocabulary/Content","ใช้ 'so' เชื่อมสาเหตุ-ผล (small school so not every subject is covered)","เรียงข้อมูลจากภาพรวม (ประเภทโรงเรียน) ไปเฉพาะเจาะจง (ตัวคุณเอง)"],
+       vocab:["sub-district","in total","fully covered"]},
+      {time:30, q:"Tell me about the subjects you teach.",
+       model:"My main subject is upper-secondary chemistry, but because our school doesn't have a teacher for every major, I also teach art to Mattayom 1 and 2 students. Teaching two very different subjects keeps me busy, but it has also made me a much more flexible teacher.",
+       tips:["บอกวิชาหลักก่อน แล้วค่อยเสริมวิชารอง พร้อมเหตุผล (because...)","ใช้ 'but' เพื่อแสดงมุมบวกจากสถานการณ์ที่ท้าทาย","ปิดท้ายด้วยสิ่งที่ได้เรียนรู้ ไม่ใช่แค่บอกข้อเท็จจริง"],
+       vocab:["upper-secondary","flexible","keep (someone) busy"]},
+      {time:30, q:"What do you find most rewarding about your job as a teacher?",
+       model:"For me, the most rewarding part is seeing students apply chemistry to solve a real problem in their own lives, rather than just memorising formulas. It's especially meaningful in a small school like mine, where I really get to know each student personally, year after year.",
+       tips:["ใช้ 'rather than' เพื่อเปรียบเทียบสิ่งที่มีคุณค่ากว่ากับสิ่งที่คุ้นเคย","เชื่อมกลับไปที่บริบทโรงเรียนเล็ก เพื่อให้คำตอบมีเอกลักษณ์เฉพาะตัว ไม่ใช่คำตอบทั่วไป","จบด้วยวลีขยายความรู้สึก เช่น 'year after year' เพื่อยืดคำตอบอย่างเป็นธรรมชาติ"],
+       vocab:["apply (something) to","meaningful","get to know"]}
+    ]},
+  { title:"Part Two", kind:"single", image:"labClass",
+    instruction:"บรรยายภาพ 1 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    caption:"Students working with simple materials at their desks instead of full laboratory equipment.",
+    items:[
+      {time:45, q:"Describe this picture.",
+       model:"In this picture, I can see three students working at their desks with some simple containers rather than proper laboratory equipment, while the teacher stands nearby, supervising. It looks like a chemistry class that has to rely on basic materials, since the school probably doesn't have enough proper lab equipment for every student.",
+       tips:["ใช้ 'rather than' เพื่อชี้ contrast ระหว่างของจริงกับของที่ควรจะมี","เดาบริบทเพิ่มเติมด้วย 'probably / since' เพื่อแสดงเหตุผล","บรรยายบทบาทของครูและนักเรียนแยกกันให้ชัดเจน"],
+       vocab:["laboratory equipment","supervise","rely on"]},
+      {time:45, q:"How do you make lessons practical when equipment or resources are limited?",
+       model:"Since our lab equipment is old and often not enough for every student, I focus less on formal experiments and more on activities where students think through a problem themselves, using whatever simple materials we have. I also try to design tasks where they apply chemistry to something from their own daily life, which makes the lesson feel practical even without a full lab.",
+       tips:["เริ่มด้วย 'Since...' อธิบายข้อจำกัดก่อน แล้วค่อยอธิบายวิธีแก้ปัญหา","ใช้ 'focus less on X and more on Y' เพื่อเทียบแนวทางเก่ากับแนวทางที่ปรับใหม่","ปิดท้ายด้วยผลลัพธ์ที่ได้ (feels practical even without...) เพื่อแสดง Discourse Management ที่ดี"],
+       vocab:["formal experiment","apply (chemistry) to","daily life"]},
+      {time:45, q:"Why is it important for students to relate chemistry to everyday life?",
+       model:"Most of my students won't go on to study science at university, so if chemistry stays just abstract formulas, it feels pointless to them. But when they can connect it to something like cooking, cleaning products or farming, they see it's actually useful, and that helps them stay engaged even if they find the subject difficult.",
+       tips:["เริ่มด้วยข้อเท็จจริงเกี่ยวกับผู้เรียนของคุณ (most students won't go on to study science) เพื่อสร้างบริบทเฉพาะตัว","ยกตัวอย่างเป็นรูปธรรม (cooking, farming) แทนคำตอบเชิงนามธรรม","ใช้ 'even if' เพื่อแสดงมุมมองที่สมดุล (แม้จะยากก็ยังเรียนรู้ได้)"],
+       vocab:["abstract","pointless","stay engaged"]}
+    ]},
+  { title:"Part Three", kind:"compare", images:["labClass","artClass"],
+    instruction:"เปรียบเทียบภาพ 2 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    captionA:"A chemistry class working with simple materials at their desks.",
+    captionB:"An art class with students working on paper and paintings at their desks.",
+    items:[
+      {time:45, q:"Tell me what you see in the two pictures.",
+       model:"The first picture shows a chemistry class, where students are working quietly with some simple containers at their desks. The second picture shows an art class, where students are working on paper and paintings, and there's a finished piece displayed at the side of the room. The atmosphere feels quite different — one is more analytical, and the other is more creative and colourful.",
+       tips:["ใช้โครงสร้างคู่ขนาน 'The first picture shows... The second picture shows...' เพื่อเปรียบเทียบชัดเจน","เพิ่มรายละเอียดเล็ก ๆ ในภาพ (a finished piece displayed) เพื่อแสดงการสังเกตที่ละเอียด","ใช้คำคู่ตรงข้าม analytical vs creative เพื่อสรุปบรรยากาศ"],
+       vocab:["analytical","display","colourful"]},
+      {time:45, q:"Describe what it would be like to teach in one of these two classes.",
+       model:"I actually teach both of these subjects myself — chemistry to upper-secondary students, and art to Mattayom 1 and 2, because our school doesn't have enough teachers for every major. Teaching art was quite challenging at first, since it's completely outside my own training, but it's also been fun, because I get to learn and experiment alongside the students instead of always being the expert in the room.",
+       tips:["ถ้ามีประสบการณ์ตรง ให้เล่าจากประสบการณ์จริงแทนการสมมติ จะทำให้คำตอบมีน้ำหนักและเป็นธรรมชาติมาก","ใช้ 'challenging at first, but...' เพื่อแสดงพัฒนาการของความรู้สึก ไม่ใช่แค่ความรู้สึกเดียว","เน้นคำว่า 'outside my own training' เพื่อสื่อถึงข้อจำกัดครูไม่ครบวิชาเอกอย่างเป็นธรรมชาติ"],
+       vocab:["outside (my) training","alongside","the expert in the room"]},
+      {time:45, q:"How important is it for teachers to be flexible and take on subjects outside their own specialism?",
+       model:"In a small school like mine, I'd say it's extremely important, because there simply aren't enough teachers to cover every subject with a specialist. It does mean extra work and sometimes learning the material yourself just before the lesson, but without that flexibility, some students in small or rural schools might not get certain subjects taught at all.",
+       tips:["ให้ระดับความสำคัญชัดเจนตั้งแต่ต้น (extremely important) แล้วอธิบายเหตุผล","ยอมรับข้อเสีย (extra work) ก่อนสรุปว่าทำไมยังจำเป็นอยู่ — แสดงมุมมองสมดุล","จบด้วยผลกระทบต่อนักเรียนถ้าไม่มีความยืดหยุ่นนี้ เพื่อให้เหตุผลหนักแน่น"],
+       vocab:["specialist","rural school","flexibility"]}
+    ]},
+  { title:"Part Four", kind:"extended", image:"talkStudent", prepTime:60, answerTime:120,
+    instruction:"ดูภาพและอ่านคำถาม 3 ข้อ มีเวลาเตรียมตัว 1 นาที (จดโน้ตได้) จากนั้นตอบทั้ง 3 ข้อต่อเนื่องภายใน 2 นาที",
+    caption:"A teacher talking with a student who does not seem very interested in the lesson.",
+    subquestions:[
+      "Talk about a student who did not enjoy or want to study your subject.",
+      "How do you keep students motivated when they find your subject difficult?",
+      "What keeps you going as a teacher when things get difficult?"
+    ],
+    model:"I once had a student who told me that just hearing the word 'chemistry' already made him nervous, and he didn't see the point of studying it since he wasn't planning to continue in science. In situations like that, I try to keep students motivated by telling them it's fine if they don't remember every formula — at least they're practising how to think through a problem step by step, and that skill stays with them even if the chemistry content doesn't. What really keeps me going on difficult days is trying not to expect too much from every single student. I remind myself that my job is to wish them well and give them a fair chance, not to force everyone to love chemistry, and that mindset is really what stops me from burning out.",
+    tips:["ในข้อแรก เล่าเหตุการณ์เฉพาะเจาะจง (a student who said...) ดีกว่าพูดกว้าง ๆ — ทำให้คำตอบมีเรื่องราว","เชื่อม 3 คำตอบด้วยวลี เช่น 'In situations like that...' และ 'What really keeps me going...' เพื่อให้ลื่นไหลเป็นเรื่องเดียวกัน ไม่ใช่ตอบทีละข้อแยกกัน","ประโยคสุดท้ายสรุปด้วย mindset/หลักคิดส่วนตัว ทำให้ผู้ฟังรู้สึกว่าเป็นคำตอบที่จริงใจและมีความลึก","ฝึกพูดให้เวลาใกล้เคียงกันทั้ง 3 ข้อ (~40 วินาทีต่อข้อ) จะช่วยให้ discourse สมดุล"],
+    vocab:["step by step","expect too much","a fair chance","burn out"]}
+  ]},
+D:{
+  label:"ชุดที่ 4",
+  tag:"หัวข้อใหม่อีกชุด ฝึกความหลากหลาย",
+  parts:[
+  { title:"Part One", kind:"personal",
+    instruction:"ผู้คุมสอบจะถามคำถามสั้น ๆ เกี่ยวกับตัวคุณ 3 ข้อ — ข้อละ 30 วินาที",
+    items:[
+      {time:30, q:"How do you assess your students' progress?",
+       model:"I use a mix of short quizzes, homework and classroom observation to check progress, rather than relying on just one big test. I find that watching how students respond during a lesson often tells me more about their real understanding than a test score does.",
+       tips:["ใช้ 'a mix of...' เพื่อแสดงว่าคุณมีวิธีการหลากหลาย ไม่ใช่วิธีเดียว","เปรียบเทียบสองแนวทาง (one big test vs ongoing observation) เพื่อแสดงความคิดเห็นที่มีเหตุผล","ปิดท้ายด้วยเหตุผลส่วนตัวว่าทำไมเลือกทำแบบนี้"],
+       vocab:["classroom observation","rely on","real understanding"]},
+      {time:30, q:"Tell me about an extracurricular activity you are involved in at school.",
+       model:"I help run the school's science club, where students work on small projects outside normal lesson time. It's a nice change from regular classes, because students join because they want to, not because they have to, so the atmosphere is much more relaxed.",
+       tips:["บอกชื่อกิจกรรมเฉพาะเจาะจง (science club) แทนคำตอบกว้าง ๆ","ใช้ 'because...not because...' เพื่อเปรียบเทียบแรงจูงใจ ทำให้คำตอบมีมิติ","เชื่อมท้ายประโยคด้วยผลลัพธ์ (the atmosphere is...) เพื่อให้ยาวขึ้นตามธรรมชาติ"],
+       vocab:["extracurricular","outside lesson time","atmosphere"]},
+      {time:30, q:"What do you do to develop your own teaching skills?",
+       model:"I regularly watch other teachers' lessons when I get the chance, and I try out new activities I read about online, even if they don't always work perfectly the first time. I think being willing to experiment is just as important as attending formal training courses.",
+       tips:["ใช้ 'even if...' เพื่อแสดงว่ายอมรับความล้มเหลวได้ ไม่ใช่แค่เล่าด้านดี","เปรียบเทียบการเรียนรู้แบบไม่เป็นทางการ (trying new things) กับแบบเป็นทางการ (training courses)","ให้ความเห็นส่วนตัวปิดท้าย (I think... is just as important as...)"],
+       vocab:["experiment (verb)","formal training","try out"]}
+    ]},
+  { title:"Part Two", kind:"single", image:"feedbackClass",
+    instruction:"บรรยายภาพ 1 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    caption:"A teacher handing back marked work to a student at a desk.",
+    items:[
+      {time:45, q:"Describe this picture.",
+       model:"In the picture, a teacher is handing a piece of marked work back to a student sitting at a desk. The student looks like they're waiting to hear some comments about it. It seems like a fairly calm, one-to-one moment, probably after a written assignment has been checked.",
+       tips:["บรรยายจากสิ่งที่ 'กำลังเกิดขึ้น' (handing back) ก่อน แล้วค่อยขยายไปสิ่งที่เดา (probably after...)","ใช้ 'It seems like / probably' เมื่อบรรยายสิ่งที่ไม่แน่ใจ 100% จากภาพ","เน้นคำว่า 'one-to-one' เพื่อบรรยายลักษณะปฏิสัมพันธ์ในภาพให้ชัดเจน"],
+       vocab:["marked work","one-to-one","written assignment"]},
+      {time:45, q:"How do you give feedback to students on their work?",
+       model:"I try to give a mix of written comments and a short face-to-face chat, because writing alone can feel quite impersonal, especially for younger students. I always start with something positive before pointing out what needs improving, so students don't feel discouraged.",
+       tips:["ใช้ 'a mix of...' อีกครั้งเพื่อแสดงวิธีการที่หลากหลาย (เหมือนคำตอบข้อ Part1 คำถามแรก — ฝึกใช้โครงสร้างนี้ให้คล่อง)","อธิบายลำดับขั้นตอน (I always start with... before...) ให้เห็นภาพวิธีทำงานจริง","ปิดท้ายด้วยเหตุผลเชิงความรู้สึกของนักเรียน (discouraged) เพื่อแสดงความเข้าใจผู้เรียน"],
+       vocab:["impersonal","point out","discouraged"]},
+      {time:45, q:"Why is feedback important for language learners?",
+       model:"Feedback helps language learners notice mistakes they might not even be aware of, like a small grammar error they keep repeating without realising it. Without that kind of feedback, students can practise a mistake so often that it becomes a habit that's much harder to correct later on.",
+       tips:["ยกตัวอย่างเฉพาะเจาะจง (a small grammar error) แทนพูดกว้าง ๆ ว่า 'it's important'","ใช้โครงสร้าง 'Without X, Y can happen' เพื่อแสดงผลลัพธ์ทางลบถ้าไม่มี feedback","จบด้วยผลระยะยาว (harder to correct later on) เพื่อเพิ่มน้ำหนักเหตุผล"],
+       vocab:["notice (a mistake)","repeat (a mistake)","become a habit"]}
+    ]},
+  { title:"Part Three", kind:"compare", images:["onlineHome","wholeClass"],
+    instruction:"เปรียบเทียบภาพ 2 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    captionA:"A student studying at home on a laptop.",
+    captionB:"A full classroom of students with a teacher at the front.",
+    items:[
+      {time:45, q:"Tell me what you see in the two pictures.",
+       model:"The first picture shows a student studying alone at home, using a laptop, probably for an online lesson. The second picture shows a full classroom with many students and a teacher at the front, which is a much more traditional learning environment. The two settings look very different in terms of how much social interaction is happening.",
+       tips:["ใช้ 'probably for...' เพื่อเดาบริบทของภาพอย่างสมเหตุสมผล","ใช้คำว่า 'traditional' เพื่อเปรียบเทียบกับภาพแรกที่ไม่ใช่รูปแบบดั้งเดิม","สรุปด้วยมุมมองเชิงเปรียบเทียบ (in terms of...) เพื่อให้คำตอบมีทิศทางชัดเจน"],
+       vocab:["social interaction","traditional","learning environment"]},
+      {time:45, q:"Describe what it would be like to teach a lesson using one of these two settings.",
+       model:"Teaching a full classroom would mean I could react instantly to body language and group energy, which is something you lose almost completely online. On the other hand, teaching one student online would let me focus entirely on their individual pace, without needing to manage the whole class at once.",
+       tips:["ใช้ 'would mean / would let' เพราะเป็นสถานการณ์สมมติทั้งคู่","ใช้ 'On the other hand' เพื่อเปรียบเทียบสองฝั่งอย่างสมดุล","เน้นคำเฉพาะทาง เช่น body language, individual pace เพื่อแสดง vocabulary range"],
+       vocab:["body language","group energy","individual pace"]},
+      {time:45, q:"How important is it for students to have access to technology for learning outside school?",
+       model:"I think it's becoming increasingly important, since so many resources — videos, practice exercises, even extra classes — are now online. That said, not every student has equal access to devices or a stable internet connection, so schools also need to make sure technology doesn't create a bigger gap between students.",
+       tips:["ใช้ 'increasingly important' แทน 'very important' เพื่อแสดงมุมมองที่มีพัฒนาการตามเวลา","ยกตัวอย่างทรัพยากรเฉพาะ (videos, practice exercises) เพื่อสนับสนุนความเห็น","เพิ่มมุมกังวล (not every student has equal access) เพื่อแสดงว่ามองรอบด้าน ไม่ใช่มองบวกอย่างเดียว"],
+       vocab:["equal access","stable connection","create a gap"]}
+    ]},
+  { title:"Part Four", kind:"extended", image:"parentMeeting", prepTime:60, answerTime:120,
+    instruction:"ดูภาพและอ่านคำถาม 3 ข้อ มีเวลาเตรียมตัว 1 นาที (จดโน้ตได้) จากนั้นตอบทั้ง 3 ข้อต่อเนื่องภายใน 2 นาที",
+    caption:"A teacher talking with a parent about a student's progress.",
+    subquestions:[
+      "Talk about the last time you communicated with a parent about a student's progress.",
+      "How do you feel about involving parents in a student's learning?",
+      "How important is parent-teacher communication for a student's success?"
+    ],
+    model:"Last term, I spoke with a parent whose child had suddenly stopped handing in homework, and it turned out there were some difficulties at home that I hadn't been aware of at all. That conversation really changed how I supported the student afterwards. Generally, I feel very positive about involving parents, because they often notice things about a child's mood or behaviour that I simply can't see during a fifty-minute lesson. Overall, I'd say parent-teacher communication is extremely important for a student's success, since problems are usually much easier to solve early, before they start affecting a student's grades or confidence.",
+    tips:["เริ่มด้วยเหตุการณ์เฉพาะเจาะจง (Last term, I spoke with...) เพื่อให้คำตอบมีเรื่องราวน่าติดตาม","ใช้ 'That conversation really changed...' เชื่อมจากข้อ 1 ไปข้อ 2 อย่างเป็นธรรมชาติ","ใช้ 'Overall, I'd say...' เปิดคำตอบข้อสุดท้ายเพื่อส่งสัญญาณว่ากำลังสรุป","แบ่งเวลาให้ใกล้เคียงกันทั้ง 3 ข้อ และฝึกพูดให้ประโยคเชื่อมกันลื่นไหลเหมือนเล่าเรื่องเดียว ไม่ใช่ตอบทีละข้อแยกกัน"],
+    vocab:["hand in (homework)","notice (something)","affect (grades/confidence)"]}
+  ]},
+E:{
+  label:"ชุดที่ 5",
+  tag:"อิงหัวข้อและสไตล์จากข้อสอบ/รีวิวจริง",
+  parts:[
+  { title:"Part One", kind:"personal",
+    instruction:"ผู้คุมสอบจะถามคำถามสั้น ๆ เกี่ยวกับตัวคุณ 3 ข้อ — ข้อละ 30 วินาที",
+    items:[
+      {time:30, q:"Please describe your classroom.",
+       model:"My classroom is on the ground floor, and I'm quite lucky because it gets a lot of natural light through the windows. I've put up some students' project work on the walls, so it feels colourful and lived-in, even though the furniture itself is fairly old and basic.",
+       tips:["ใช้คำคุณศัพท์บรรยายบรรยากาศ (colourful, lived-in) แทนแค่บอกขนาด/สี","เชื่อม 'even though' เพื่อแสดงมุมมองสองด้าน (ข้อดี + ข้อจำกัด) อย่างเป็นธรรมชาติ","หัวข้อนี้ออกสอบจริงบ่อย ควรเตรียมคำศัพท์บรรยายห้องเรียนไว้ล่วงหน้า (natural light, on the wall, basic furniture)"],
+       vocab:["natural light","lived-in","basic furniture"]},
+      {time:30, q:"Tell me about your colleagues.",
+       model:"I work with a small group of teachers who are very supportive of each other, since our school is quite small. We often share ideas and materials, especially the other science teachers, and a couple of us have become good friends outside of work too.",
+       tips:["ใช้ 'since' อธิบายเหตุผลของความสัมพันธ์ (small school -> supportive)","ระบุกลุ่มเฉพาะ (the other science teachers) แทนพูดกว้าง ๆ ว่า 'my colleagues'","เพิ่มมิติความสัมพันธ์ส่วนตัว (good friends outside of work) เพื่อให้คำตอบไม่แข็งเกินไป"],
+       vocab:["supportive","share ideas","outside of work"]},
+      {time:30, q:"What do you usually do to relax after a day of teaching?",
+       model:"As soon as I get home, I usually take some time to unwind before doing any marking, otherwise I find it hard to focus properly. After that, I like to go for a short walk or just sit outside for a while, since being on my feet teaching all day makes we want some quiet time.",
+       tips:["ใช้ 'as soon as... otherwise...' เพื่อแสดงลำดับและเหตุผลของกิจวัตร","อธิบายว่าทำไมถึงเลือกทำสิ่งนั้น (makes me want some quiet time) ไม่ใช่แค่ลิสต์กิจกรรม","คำถามแนวนี้ออกสอบจริงบ่อย ('describe your evening routine') ควรฝึกไว้ล่วงหน้า"],
+       vocab:["unwind","otherwise","on my feet"]}
+    ]},
+  { title:"Part Two", kind:"single", image:"readingCorner",
+    instruction:"บรรยายภาพ 1 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    caption:"Children sitting on different levels in a colourful reading corner, each with a book.",
+    items:[
+      {time:45, q:"Describe this picture.",
+       model:"In this picture, I can see several children sitting on different levels in a colourful corner of what looks like a classroom or a small library, and each of them is holding a book. It could be a reading session, since they all seem focused and quiet. The room has a relaxed, informal feel, quite different from a normal row of desks.",
+       tips:["ใช้ 'on different levels' และ 'could be' เพื่อบรรยายและคาดเดาไปพร้อมกัน — โครงสร้างนี้ออกสอบจริงบ่อยมากในพาร์ทนี้","เปรียบเทียบกับภาพห้องเรียนทั่วไป (quite different from a normal row of desks) เพื่อแสดงการสังเกตเชิงเปรียบเทียบ","หลีกเลี่ยงการท่องคำตอบตัวอย่างคำต่อคำ — กรรมการจะฟังออกว่าเป็นการท่องจำ ให้ปรับคำเป็นสำนวนของตัวเอง"],
+       vocab:["on different levels","informal","focused"]},
+      {time:45, q:"What kinds of books do children and young people read in your country these days?",
+       model:"That's an interesting question — I think it really depends on their age. Younger children still love picture books and simple stories, while teenagers seem to prefer graphic novels or stories they can also find as a series online. Many students in my school also enjoy comics, probably because they're quick and fun to read between classes.",
+       tips:["เปิดด้วยวลี 'That's an interesting question...' เพื่อซื้อเวลาคิดแบบเป็นธรรมชาติ (ใช้ได้จริงในห้องสอบ)","แบ่งคำตอบตามช่วงวัย (younger children / teenagers) เพื่อให้คำตอบมีโครงสร้างชัดเจน","เติมเหตุผล (probably because...) ให้กับทุกข้อสังเกต ไม่ใช่แค่ลิสต์ประเภทหนังสือ"],
+       vocab:["graphic novel","a series","between classes"]},
+      {time:45, q:"How have children's reading habits changed since you were young?",
+       model:"When I was a child, we mostly read printed books because there wasn't really another option, and going to the library felt like a special trip. Nowadays, a lot of children read on tablets or phones, and honestly, I sometimes worry that shorter online content is making it harder for them to concentrate on longer stories.",
+       tips:["ใช้ 'When I was a child... Nowadays...' เพื่อเปรียบเทียบอดีต-ปัจจุบันชัดเจน","แทรกความเห็นส่วนตัว 'honestly, I sometimes worry that...' เพื่อแสดงความเป็นธรรมชาติ ไม่ใช่คำตอบท่องจำ","จบด้วยข้อกังวลหรือข้อสังเกตเชิงลึก แทนการสรุปแบบผิวเผิน"],
+       vocab:["printed book","concentrate","shorter content"]}
+    ]},
+  { title:"Part Three", kind:"compare", images:["chessGame","footballGame"],
+    instruction:"เปรียบเทียบภาพ 2 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    captionA:"Two children playing chess at a table.",
+    captionB:"Children playing football outdoors.",
+    items:[
+      {time:45, q:"Tell me what you see in these two pictures.",
+       model:"The first picture shows two children playing chess at a table, sitting quietly and concentrating on the board. The second picture shows a group of children playing football outside, running around and being much more physically active. Both pictures show children involved in games, but the energy level in each one is completely different.",
+       tips:["ใช้โครงสร้างคู่ขนาน 'The first picture shows... The second picture shows...' — รูปแบบนี้ตรงกับข้อสอบจริงในพาร์ทนี้เป๊ะ ๆ","ปิดท้ายด้วยจุดร่วม (Both pictures show...) ก่อนชี้ความต่าง (energy level) เพื่อให้คำตอบมีโครงสร้างที่ครบถ้วน","ใช้ 'physically active' เป็นคำศัพท์เฉพาะทางที่ช่วยเพิ่ม vocabulary range"],
+       vocab:["concentrate on","physically active","energy level"]},
+      {time:45, q:"Which after-school activities are popular among students in your country?",
+       model:"In my country, football is probably the most popular after-school activity, especially among boys, but board games like chess and simple video games are also common, particularly for students who prefer something calmer. Some schools, including mine, also run clubs like art or science club for students who want something more structured.",
+       tips:["ให้คำตอบระดับ 'most popular' ก่อน แล้วค่อยเสริมทางเลือกอื่น (also common) เพื่อความครบถ้วน","ใช้ 'particularly for...' เพื่อระบุกลุ่มเป้าหมายเฉพาะ แสดงความคิดที่ละเอียด","เชื่อมโยงกลับไปที่ประสบการณ์ตัวเอง (including mine) เพื่อให้คำตอบดูจริงใจ ไม่ใช่ตอบลอย ๆ"],
+       vocab:["board game","calmer","structured"]},
+      {time:45, q:"Why do you think some children prefer quiet, individual games while others prefer team sports?",
+       model:"I think it often comes down to personality — some children feel more comfortable thinking quietly on their own, while others get their energy from being around a group and competing together. It might also depend on what's encouraged at home; a child whose family plays board games together may naturally lean towards games like chess.",
+       tips:["เปิดด้วย 'it often comes down to...' เพื่อแสดงความคิดเห็นเชิงวิเคราะห์ ไม่ใช่แค่บรรยายข้อเท็จจริง","เสนอสองสาเหตุ (personality + family influence) เพื่อแสดงมุมมองที่มีมิติ","ใช้ 'It might also depend on...' เป็นโครงสร้าง speculation ที่ตรงกับสิ่งที่พาร์ทนี้ต้องการวัด (compare + speculate)"],
+       vocab:["comes down to","lean towards","encouraged at home"]}
+    ]},
+  { title:"Part Four", kind:"extended", image:"mentorObserve", prepTime:60, answerTime:120,
+    instruction:"ดูภาพและอ่านคำถาม 3 ข้อ มีเวลาเตรียมตัว 1 นาที (จดโน้ตได้) จากนั้นตอบทั้ง 3 ข้อต่อเนื่องภายใน 2 นาที",
+    caption:"A teacher being observed by a mentor while the rest of the class continues working.",
+    subquestions:[
+      "Talk about a time when you were observed by another teacher, or when you observed a colleague's lesson.",
+      "How do you usually deal with disruptive students in your classroom?",
+      "How useful is a mentoring scheme for new or trainee teachers?"
+    ],
+    model:"I clearly remember the first time I was formally observed, during my teacher-training course — the classroom felt very small that day, with the course tutor sitting quietly at the back taking notes. Afterwards, she gave me some really practical tips on lesson-planning and classroom management, especially how to deal with disruptive students, which was something I was struggling with at the time. As for disruptive behaviour now, I try to deal with it calmly and quietly rather than stopping the whole lesson, since making a big scene often makes things worse. Overall, I think a mentoring scheme is extremely useful for new teachers, because a more experienced colleague can often see things about your teaching that you simply can't notice yourself.",
+    tips:["เล่าประสบการณ์ตรงเฉพาะเจาะจง (my first observation) ก่อน แล้วค่อยขยายไปคำถามทั่วไปข้อ 2-3 — โครงสร้างนี้ตรงกับตัวอย่างคำตอบจริงของข้อสอบชุดนี้","ใช้ 'As for... now...' เชื่อมจากเรื่องเล่าในอดีต (ข้อ 1) ไปสู่การปฏิบัติในปัจจุบัน (ข้อ 2) อย่างลื่นไหล","คำว่า 'making a big scene' และ 'a mentoring scheme' เป็นคำศัพท์ระดับ B2 ที่ควรมีติดตัวสำหรับหัวข้อนี้โดยเฉพาะ","จำไว้ว่ากรรมการฟังออกได้ถ้าคำตอบฟังดูท่องจำมาทั้งดุ้น ให้ฝึกจนคุ้นแล้วพูดด้วยคำของตัวเองในห้องสอบจริง"],
+    vocab:["formally observed","classroom management","make a big scene","mentoring scheme"]}
+  ]},
+F:{
+  label:"ชุดที่ 6",
+  tag:"หัวข้อแปลกใหม่ อิงรีวิว/ข้อสอบจริงอีกชุด",
+  parts:[
+  { title:"Part One", kind:"personal",
+    instruction:"ผู้คุมสอบจะถามคำถามสั้น ๆ เกี่ยวกับตัวคุณ 3 ข้อ — ข้อละ 30 วินาที",
+    items:[
+      {time:30, q:"How do you usually travel to work each day?",
+       model:"I usually ride a motorbike to school, since I live fairly close by and it only takes about ten minutes. On days when it's raining heavily, though, I sometimes get a ride with a colleague instead, which is also a nice chance to chat before the school day starts.",
+       tips:["ให้คำตอบหลักก่อน (ride a motorbike) แล้วเสริมเงื่อนไขพิเศษ (on days when...) เพื่อความสมจริง ไม่แข็งเกินไป","หัวข้อการเดินทาง/ยานพาหนะออกสอบจริงบ่อยใน Part 1 — ควรมีคำศัพท์ยานพาหนะและเวลาติดตัว (motorbike, ride, take (time))","ปิดท้ายด้วยข้อดีเล็ก ๆ ของทางเลือกสำรอง เพื่อยืดคำตอบอย่างเป็นธรรมชาติ"],
+       vocab:["ride (a motorbike)","fairly close by","a ride (noun)"]},
+      {time:30, q:"Tell me about a DIY or home project you have done.",
+       model:"Last year, I repainted my bedroom by myself, which took much longer than I expected because I'd never done it before. It wasn't perfect — there were a few messy edges — but I was quite proud that I'd managed to do the whole room on my own.",
+       tips:["ใช้ Past Simple + 'by myself/on my own' เพราะเป็นเรื่องเล่าประสบการณ์ส่วนตัว","ยอมรับข้อบกพร่องเล็กน้อย (a few messy edges) ทำให้คำตอบฟังดูจริงใจ ไม่ใช่คำตอบสมบูรณ์แบบเกินไป","หัวข้อ DIY เป็นหัวข้อที่ไม่ค่อยคาดคิดแต่เคยออกสอบจริง ควรเตรียมคำศัพท์งานบ้าน/ซ่อมแซมไว้บ้าง"],
+       vocab:["repaint","by myself","messy"]},
+      {time:30, q:"What is your favourite time of year, and why?",
+       model:"I'd probably say the cool season, because the weather is much more comfortable for being outside, and it's also around the time we have a school break, so I get to relax a little. Everything just feels calmer during those months compared to the hot season.",
+       tips:["ใช้ 'I'd probably say...' เพื่อแสดงความเห็นแบบไม่ฟันธงเกินไป เป็นธรรมชาติกว่า 'My favourite is...'","เชื่อมเหตุผลสองข้อด้วย 'and it's also...' เพื่อให้คำตอบมีน้ำหนักมากกว่าเหตุผลเดียว","ปิดท้ายด้วยการเปรียบเทียบกับฤดูอื่น (compared to...) เพื่อแสดงมุมมองที่ชัดเจนขึ้น"],
+       vocab:["cool season","comfortable","a school break"]}
+    ]},
+  { title:"Part Two", kind:"single", image:"busExcursion",
+    instruction:"บรรยายภาพ 1 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    caption:"Students with backpacks and suitcases, about to board a bus for a school excursion.",
+    items:[
+      {time:45, q:"Describe this picture.",
+       model:"In this picture, I can see a group of students standing next to a bus, and they seem to be about to go on a trip. They've got backpacks and even a suitcase with them, so it might be a longer trip rather than just a short visit somewhere nearby. Everyone looks excited and ready to go.",
+       tips:["สังเกตรายละเอียดเล็ก ๆ ในภาพ (a suitcase, not just backpacks) แล้วใช้เดาความยาวของทริป — เป็นทักษะที่ข้อสอบจริงเน้นวัด","ใช้ 'rather than' เพื่อเปรียบเทียบความเป็นไปได้สองแบบ (long trip vs short visit)","จบด้วยการบรรยายอารมณ์ในภาพ (excited and ready to go) เพื่อให้คำตอบไม่ใช่แค่ข้อเท็จจริงล้วน ๆ"],
+       vocab:["excursion","about to (do something)","ready to go"]},
+      {time:45, q:"What kind of school trips do students go on in your country?",
+       model:"In my country, students often go on day trips to museums, historical sites or science centres, and older students sometimes go on longer trips, like an overnight camp. Trips like these are usually organised once or twice a term, depending on the school's budget and the subject being taught.",
+       tips:["แบ่งคำตอบตามระยะเวลาทริป (day trip vs longer trip) เพื่อให้คำตอบมีโครงสร้างชัดเจน","เติมรายละเอียดเชิงปฏิบัติ (once or twice a term, budget) เพื่อแสดงความรู้เชิงลึกของครูจริง ๆ","ใช้ 'depending on...' ปิดท้ายเพื่อแสดงมุมมองที่ยืดหยุ่น ไม่ฟันธงตายตัว"],
+       vocab:["day trip","overnight camp","budget"]},
+      {time:45, q:"How do you prepare students before taking them on a trip outside school?",
+       model:"Before a trip, I usually go through some basic safety rules with the students, like staying with their group and knowing who to contact if they get separated. I also try to give them a little background information about the place we're visiting, so they get more out of the experience instead of just seeing it as a day off from lessons.",
+       tips:["ใช้ 'like...' ยกตัวอย่างกฎความปลอดภัยที่เป็นรูปธรรม แทนพูดกว้าง ๆ ว่า 'I prepare them'","เปรียบเทียบสองมุมมอง (get more out of the experience vs a day off) เพื่อแสดงเจตนาการสอนที่ลึกซึ้ง","โครงสร้าง 'instead of just...' ช่วยแสดงความคิดเห็นเชิงเปรียบเทียบได้ดีในคำตอบระดับนี้"],
+       vocab:["safety rules","get separated","get more out of"]}
+    ]},
+  { title:"Part Three", kind:"compare", images:["busExcursion","artGallery"],
+    instruction:"เปรียบเทียบภาพ 2 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    captionA:"Students about to board a bus for an excursion.",
+    captionB:"Students on a school trip, looking at paintings in an art gallery.",
+    items:[
+      {time:45, q:"Tell me what you see in these two pictures.",
+       model:"Both pictures show students on some kind of school trip, but the two situations look quite different. In the first picture, the students are outside, waiting to board a bus, with backpacks and luggage, so it looks like the start of a longer journey. In the second picture, the students are indoors in an art gallery, standing quietly and looking at paintings on the wall, which feels much calmer.",
+       tips:["เริ่มด้วยจุดร่วม (Both pictures show...) ก่อนแยกไปบรรยายความต่าง — เป็นโครงสร้างที่ตรงกับคำตอบตัวอย่างจริงในหัวข้อนี้","ใช้ 'in the first picture / in the second picture' สลับกับ 'the students are...' เพื่อไม่ให้ประโยคซ้ำแบบเดิมทุกประโยค","ปิดท้ายด้วยความรู้สึกของแต่ละภาพ (calmer) เพื่อให้คำตอบมีมิติมากกว่าการบรรยายวัตถุอย่างเดียว"],
+       vocab:["board (a bus)","luggage","indoors"]},
+      {time:45, q:"Which of these two types of trip do you think students enjoy more, and why?",
+       model:"I'd guess most students would prefer the excursion with the bus, simply because it feels more like an adventure and they usually get to spend time with their friends more freely. That said, a gallery visit can also be really enjoyable for students who are more interested in art, so it probably depends a lot on the individual student.",
+       tips:["ใช้ 'I'd guess...' เพื่อแสดงว่าเป็นการคาดเดา (speculation) ตรงตามจุดประสงค์ของพาร์ทนี้","เสนอมุมมองที่สมดุล (That said...) แทนการฟันธงไปทางเดียว","จบด้วย 'it probably depends on...' เป็นวลีปิดคำตอบเชิงเปรียบเทียบที่ใช้ได้กับคำถามลักษณะนี้แทบทุกข้อ"],
+       vocab:["an adventure","freely","depends on the individual"]},
+      {time:45, q:"How important is it for schools to organise trips outside the classroom?",
+       model:"I think it's genuinely important, because trips like these give students experiences and memories that a normal lesson simply can't provide. That said, they do take a lot of organising and can be expensive, so schools need to plan carefully to make sure every student can actually take part.",
+       tips:["ใช้ 'genuinely important' แทน 'very important' เพื่อให้ฟังเป็นธรรมชาติและหลากหลายคำศัพท์มากขึ้น","ยอมรับข้อจำกัดเชิงปฏิบัติ (organising, expensive) ก่อนสรุป เพื่อแสดงมุมมองรอบด้าน","ปิดท้ายด้วยประเด็นความเท่าเทียม (every student can take part) ซึ่งเป็นมุมที่กรรมการมักประทับใจ"],
+       vocab:["take a lot of organising","expensive","take part"]}
+    ]},
+  { title:"Part Four", kind:"extended", image:"startSchool", prepTime:60, answerTime:120,
+    instruction:"ในพาร์ทนี้ภาพเป็นเพียง 'ฉากตั้งเรื่อง' เท่านั้น — ไม่ต้องบรรยายภาพ! ให้อ่านคำถาม 3 ข้อ เตรียมตัว 1 นาที แล้วเล่าความทรงจำต่อเนื่องภายใน 2 นาที",
+    caption:"(ภาพนี้เป็นแค่ฉากตั้งเรื่อง ไม่ต้องบรรยายภาพในคำตอบของคุณ)",
+    subquestions:[
+      "Tell me what you can remember about starting school for the very first time.",
+      "How did you feel on that day?",
+      "Is there anything from that day that still affects how you teach now?"
+    ],
+    model:"I'll always remember the day I started primary school — I was holding my mother's hand so tightly at the gate that she had to gently remind me she'd be back to pick me up later. I'd never felt so nervous in my life, to be honest, because everything and everyone around me was completely new. Looking back now, I think that memory is actually part of why I make an effort to welcome new or nervous students so warmly today — I try to remember that, for them, that first day can feel exactly as overwhelming as it felt for me all those years ago.",
+    tips:["พาร์ทนี้เป็นคนละแบบกับชุดก่อน ๆ — โจทย์จริงบางชุดให้ 'เล่าความทรงจำ' แทนการแสดงความเห็น และย้ำว่า 'ภาพเป็นแค่ฉาก ไม่ต้องบรรยาย' ต้องอ่านคำสั่งให้ดีทุกครั้งว่าพาร์ท 4 เป็นแบบไหน","ใช้ narrative tenses ให้หลากหลาย: past simple (started, felt), 'I'd never felt so...' (past perfect เพื่อเน้นความรู้สึกก่อนหน้า), 'I'll always remember...' เป็นวลีเปิดเรื่องที่เป็นธรรมชาติมาก","ข้อสุดท้ายเชื่อมความทรงจำในอดีตกลับมาสู่ปัจจุบัน (Looking back now...) ซึ่งเป็นสิ่งที่คำตอบระดับสูงมักทำได้ดี","แบ่งเวลาให้ 3 ข้อใกล้เคียงกัน — ข้อ 'ความรู้สึก' อาจสั้นกว่าข้ออื่นได้ตามธรรมชาติ ไม่ต้องกังวลถ้าสั้นกว่านิดหน่อย"],
+    vocab:["hold (someone's) hand","overwhelming","looking back now"]}
+  ]},
+G:{
+  label:"ชุดที่ 7",
+  tag:"หัวข้อใหม่ เน้นสิ่งที่ออกจริง",
+  parts:[
+  { title:"Part One", kind:"personal",
+    instruction:"ผู้คุมสอบจะถามคำถามสั้น ๆ เกี่ยวกับตัวคุณ 3 ข้อ — ข้อละ 30 วินาที",
+    items:[
+      {time:30, q:"Tell me about your favourite subject when you were a student.",
+       model:"When I was at school, my favourite subject was actually science, mostly because of one teacher who made every lesson feel like a discovery rather than just facts to memorise. That's probably one of the reasons I ended up becoming a science teacher myself.",
+       tips:["หัวข้อ 'ตอนเป็นนักเรียน' ออกสอบจริงบ่อยมาก ควรเตรียมคำตอบเรื่องวิชาที่ชอบไว้ล่วงหน้า","เชื่อมคำตอบกลับมาที่อาชีพครูปัจจุบัน (That's probably one of the reasons...) ให้คำตอบมีความต่อเนื่อง","ใช้ 'rather than' เพื่อเปรียบเทียบสองมุมมอง (discovery vs memorising facts)"],
+       vocab:["a discovery","memorise","end up (doing something)"]},
+      {time:30, q:"Describe a teacher who inspired you when you were young.",
+       model:"I had a maths teacher who always had a lot of patience with students who were struggling, including me. She never made anyone feel embarrassed for asking a question twice, and I try to remember that patience whenever one of my own students is finding something difficult.",
+       tips:["ยกตัวอย่างพฤติกรรมเฉพาะเจาะจง (never made anyone feel embarrassed) แทนคำคุณศัพท์กว้าง ๆ ว่า 'kind'","เชื่อมโยงกลับมาที่ตัวเองปัจจุบัน (I try to remember...) เพื่อแสดงว่าเป็นแรงบันดาลใจจริง","ใช้ Past Simple เล่าคุณลักษณะของครูคนนั้นตลอดประโยค"],
+       vocab:["patience","embarrassed","struggling"]},
+      {time:30, q:"What do you do during your lunch break at school?",
+       model:"Most days, I eat lunch quickly with a couple of colleagues in the staff room, and then I use the rest of the break to prepare materials for my afternoon classes. It's not always very relaxing, to be honest, but it's a good chance to catch up with people.",
+       tips:["ใช้ 'to be honest' แทรกความคิดเห็นจริงใจ ทำให้คำตอบไม่แข็งเกินไป","แบ่งคำตอบเป็นสองส่วน (eat lunch + prepare materials) เพื่อให้มีรายละเอียดมากกว่าคำตอบสั้น ๆ","จบด้วยข้อดีเล็ก ๆ (a good chance to catch up) แม้จะเริ่มด้วยข้อจำกัด (not always relaxing)"],
+       vocab:["the staff room","catch up with","relaxing"]}
+    ]},
+  { title:"Part Two", kind:"single", image:"boardWriting",
+    instruction:"บรรยายภาพ 1 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    caption:"A teacher at the whiteboard while a student comes up to write on the board too.",
+    items:[
+      {time:45, q:"Describe this picture.",
+       model:"In this picture, a teacher is standing near the whiteboard, and it looks like a student has been invited up to write something on it as well, while the rest of the class works at their desks. It's not a completely typical classroom activity, but it seems like a nice way to get a student more involved than usual.",
+       tips:["ใช้ 'It's not a completely typical activity, but...' เพื่อแสดงความเห็นเชิงสังเกตที่ลึกกว่าการบรรยายทั่วไป","สังเกตความสัมพันธ์ระหว่างคน 2 คนในภาพ (teacher + student) ก่อนขยายไปพื้นหลัง","ใช้ 'seems like' เมื่อตีความสิ่งที่กำลังเกิดขึ้นแบบไม่ฟันธง 100%"],
+       vocab:["invited up","get (someone) involved","typical activity"]},
+      {time:45, q:"How do you check students' homework in your class?",
+       model:"I usually walk around and check quickly while students are doing a warm-up activity, rather than collecting every single book. Occasionally, though, I ask a student to write their answer on the board for everyone to check together, since it saves time and the whole class benefits from seeing the correction.",
+       tips:["เปรียบเทียบสองวิธี (walk around vs write on board) เพื่อแสดงความยืดหยุ่นในการสอน","ใช้ 'rather than' และ 'though' เชื่อมความคิดที่ต่างกันในประโยคเดียว","อธิบายเหตุผลเชิงปฏิบัติ (saves time, whole class benefits) ไม่ใช่แค่บอกวิธีทำเฉย ๆ"],
+       vocab:["a warm-up activity","occasionally","benefit from"]},
+      {time:45, q:"How important is homework for language learning?",
+       model:"I think it's fairly important, mainly because a fifty-minute lesson just isn't enough practice time on its own for a language. That said, I try not to give too much, since homework that's too long often gets rushed or copied, which honestly doesn't help anyone learn.",
+       tips:["ให้ระดับความสำคัญก่อน (fairly important) แล้วอธิบายเหตุผลเชิงปฏิบัติ (not enough practice time)","เพิ่มมุมกังวล/ข้อจำกัด (that said...) เพื่อแสดงมุมมองที่สมดุล ไม่ใช่เห็นด้วยอย่างเดียว","ใช้ 'which honestly doesn't help anyone' แทรกน้ำเสียงความเห็นส่วนตัวแบบเป็นธรรมชาติ"],
+       vocab:["practice time","rushed","copied (work)"]}
+    ]},
+  { title:"Part Three", kind:"compare", images:["studentsPhones","studentsBooks"],
+    instruction:"เปรียบเทียบภาพ 2 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    captionA:"Students at their desks, each looking at a mobile phone.",
+    captionB:"Students at their desks, each reading from a printed book.",
+    items:[
+      {time:45, q:"Tell me what you see in these two pictures.",
+       model:"The first picture shows students working with their mobile phones at their desks, which could be for a lesson activity or possibly just for personal use. The second picture shows students reading from printed books instead, in a much more traditional way. Both groups look focused, but the tools they're using are completely different.",
+       tips:["ใช้ 'could be... or possibly...' เพื่อเสนอความเป็นไปได้มากกว่าหนึ่งอย่างอย่างสมเหตุสมผล","ปิดท้ายด้วยจุดร่วม (Both groups look focused) ก่อนเน้นความต่าง (the tools) เพื่อให้คำตอบมีโครงสร้างครบ","หัวข้อโทรศัพท์ในห้องเรียนเป็นประเด็นถกเถียงจริงที่ออกสอบบ่อย ควรมีคำศัพท์และความเห็นเตรียมไว้"],
+       vocab:["personal use","in a traditional way","focused"]},
+      {time:45, q:"Should students be allowed to use mobile phones in lessons?",
+       model:"I think it really depends on how they're used — if a phone is being used for a specific learning task, like a vocabulary app, then I don't see a problem. But if phones are allowed freely, they can easily become a distraction, so I'd say schools need very clear rules rather than a simple yes or no.",
+       tips:["เปิดด้วย 'it really depends on...' แสดงมุมมองที่ไม่ฟันธงทันที เป็นคำตอบระดับสูงที่กรรมการชอบ","ยกตัวอย่างเฉพาะเจาะจง (a vocabulary app) เพื่อสนับสนุนความเห็น","สรุปด้วยข้อเสนอเชิงนโยบาย (clear rules) แทนคำตอบ yes/no ธรรมดา"],
+       vocab:["a distraction","clear rules","a learning task"]},
+      {time:45, q:"How do you think classrooms will change in the future?",
+       model:"I imagine technology will play an even bigger role, maybe with more interactive tools replacing some printed materials. That said, I don't think teachers will disappear — if anything, I think the teacher's role will shift more towards guiding students, rather than just delivering information to them.",
+       tips:["ใช้ 'I imagine...' เพื่อแสดงการคาดเดาอย่างมั่นใจแต่ไม่ฟันธง ตรงกับจุดประสงค์ของคำถามเดา-อนาคต","ใช้ 'if anything' เป็นสำนวนระดับสูงเพื่อเสริมความเห็นให้แน่นขึ้น","เปรียบเทียบบทบาทเดิม-ใหม่ของครู (guiding vs delivering information) เพื่อแสดงความคิดเชิงลึก"],
+       vocab:["play a role","shift towards","deliver information"]}
+    ]},
+  { title:"Part Four", kind:"extended", image:"ecoLesson", prepTime:60, answerTime:120,
+    instruction:"ดูภาพและอ่านคำถาม 3 ข้อ มีเวลาเตรียมตัว 1 นาที (จดโน้ตได้) จากนั้นตอบทั้ง 3 ข้อต่อเนื่องภายใน 2 นาที",
+    caption:"Students planting a tree as part of a school activity.",
+    subquestions:[
+      "Talk about a lesson or activity where environmental issues came up.",
+      "How important is it for schools to teach students about protecting the environment?",
+      "What more could your school do to be more environmentally friendly?"
+    ],
+    model:"Last year, we did a small project where students collected and sorted the school's rubbish for a week, and quite a few of them were genuinely shocked at how much plastic waste we produced. I think teaching students about the environment is extremely important, because habits like recycling or saving energy are much easier to build when you learn them early, rather than trying to change as an adult. As for my own school, I think we could definitely do more — for example, we don't have a proper recycling system yet, and simple things like that would make a real difference if the school actually followed through on them.",
+    tips:["เริ่มด้วยกิจกรรมจริงเฉพาะเจาะจง (sorting rubbish for a week) เพื่อให้คำตอบมีเรื่องราว ไม่ใช่ทฤษฎีลอย ๆ","ใช้ 'As for my own school...' เชื่อมจากคำถามทั่วไปกลับมาที่บริบทของตัวเอง — เป็นเทคนิคที่ใช้ได้กับพาร์ท 4 แทบทุกหัวข้อ","วิจารณ์โรงเรียนตัวเองอย่างสร้างสรรค์ (we could definitely do more) แสดงว่ามองอย่างมีวิจารณญาณ ไม่ใช่แค่ชมอย่างเดียว","หัวข้อสิ่งแวดล้อมเป็นหนึ่งใน 'abstract topics' ที่ British Council ระบุว่าออกใน Part 4 จริง ควรเตรียมคำศัพท์ไว้"],
+    vocab:["sort (rubbish)","recycling system","make a difference"]}
+  ]},
+H:{
+  label:"ชุดที่ 8",
+  tag:"กฎระเบียบ & การพัฒนาตนเอง",
+  parts:[
+  { title:"Part One", kind:"personal",
+    instruction:"ผู้คุมสอบจะถามคำถามสั้น ๆ เกี่ยวกับตัวคุณ 3 ข้อ — ข้อละ 30 วินาที",
+    items:[
+      {time:30, q:"Tell me about the rules students have to follow at your school.",
+       model:"Students at my school have to wear a uniform, arrive on time and keep their phones away during lessons. Most of the rules are fairly standard, to be honest, but we're quite strict about punctuality in particular, since it affects the whole class if students keep arriving late.",
+       tips:["ยกตัวอย่างกฎ 3 ข้อสั้น ๆ ก่อน แล้วค่อยขยายความกฎที่เข้มงวดเป็นพิเศษ","ใช้ 'in particular' เพื่อเน้นกฎข้อที่สำคัญที่สุด แทนการพูดทุกข้อเท่ากันหมด","อธิบายเหตุผลเบื้องหลังกฎ (it affects the whole class) ไม่ใช่แค่ลิสต์กฎเฉย ๆ"],
+       vocab:["punctuality","strict","arrive on time"]},
+      {time:30, q:"How do you usually correct students' mistakes in class?",
+       model:"It really depends on the type of mistake — for small pronunciation errors, I often just repeat the word correctly without stopping the whole lesson. But for bigger grammar mistakes, I sometimes note them down and go through a few common ones together at the end of class.",
+       tips:["แบ่งคำตอบตามประเภทข้อผิดพลาด (pronunciation vs grammar) เพื่อแสดงวิธีการสอนที่หลากหลาย","ใช้ 'It really depends on...' เปิดคำตอบแบบไม่ฟันธง เหมาะกับคำถามที่มีหลายสถานการณ์","อธิบายจังหวะเวลาที่ต่างกัน (without stopping / at the end of class) เพื่อความชัดเจน"],
+       vocab:["pronunciation error","note (something) down","go through"]},
+      {time:30, q:"Tell me about a time you learned a new skill outside of teaching.",
+       model:"A couple of years ago, I taught myself some basic video editing so I could make short clips for my lessons. It was frustrating at first, since I had no background in it at all, but I really enjoyed the feeling of learning something completely new as an adult.",
+       tips:["ใช้ 'teach myself' เป็นวลีที่ใช้บ่อยและเป็นธรรมชาติสำหรับการเรียนรู้ด้วยตัวเอง","ยอมรับความยากลำบากตอนเริ่มต้น (frustrating at first) ก่อนสรุปด้วยความรู้สึกบวก","เชื่อมทักษะใหม่กลับไปที่การสอน (for my lessons) เพื่อให้คำตอบเชื่อมโยงกับบริบทครู"],
+       vocab:["teach myself","frustrating","a background in"]}
+    ]},
+  { title:"Part Two", kind:"single", image:"assembly",
+    instruction:"บรรยายภาพ 1 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    caption:"Students in uniform standing outside for a morning assembly.",
+    items:[
+      {time:45, q:"Describe this picture.",
+       model:"In this picture, I can see a group of students standing outside in rows, all wearing the same uniform, which makes me think it's probably a morning assembly. There seems to be some kind of flag or stage at the front, so a teacher or student leader might be about to speak.",
+       tips:["ใช้รายละเอียด (same uniform, in rows) เป็นหลักฐานสนับสนุนการเดาสถานการณ์ (probably a morning assembly)","ใช้ 'might be about to...' เพื่อคาดเดาสิ่งที่กำลังจะเกิดขึ้น","สังเกตองค์ประกอบพื้นหลัง (a flag or stage) เพื่อให้คำตอบมีรายละเอียดครบถ้วน"],
+       vocab:["in rows","a morning assembly","a student leader"]},
+      {time:45, q:"How important is a school uniform, in your opinion?",
+       model:"Personally, I think it's fairly important, mainly because it removes some of the pressure students might feel about clothes and appearance, especially among teenagers. That said, I understand why some people think uniforms are a bit old-fashioned or unnecessary, so I can see both sides of the argument.",
+       tips:["ให้ความเห็นส่วนตัวชัดเจน (Personally, I think...) พร้อมเหตุผลหลัก","เพิ่มมุมมองฝ่ายตรงข้าม (I understand why some people think...) เพื่อแสดงว่ามองรอบด้าน","ปิดท้ายด้วย 'I can see both sides of the argument' เป็นวลีสรุปที่ใช้ได้กับคำถามความเห็นแทบทุกหัวข้อ"],
+       vocab:["remove pressure","old-fashioned","both sides of the argument"]},
+      {time:45, q:"What other rules do schools in your country usually have?",
+       model:"Besides uniform and punctuality rules, schools usually have rules about hairstyles and general behaviour, like not using bad language or being disrespectful to teachers. Some schools are stricter than others, though — it really depends a lot on the school's own culture and leadership.",
+       tips:["ใช้ 'Besides...' เปิดคำตอบเพื่อขยายจากคำถามก่อนหน้าอย่างเป็นธรรมชาติ","ยกตัวอย่างกฎเพิ่มเติมหลายประเภท (hairstyles, behaviour) เพื่อแสดง vocabulary range","ปิดท้ายด้วยความแตกต่างระหว่างโรงเรียน (depends on culture and leadership) เพื่อแสดงมุมมองที่ไม่เหมารวม"],
+       vocab:["bad language","disrespectful","leadership (of a school)"]}
+    ]},
+  { title:"Part Three", kind:"compare", images:["oldClassroom","modernClassroom"],
+    instruction:"เปรียบเทียบภาพ 2 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    captionA:"A traditional classroom with students sitting in strict rows facing the front.",
+    captionB:"A more relaxed classroom with students sitting in flexible group clusters.",
+    items:[
+      {time:45, q:"Tell me what you see in these two pictures.",
+       model:"The first picture shows a very traditional classroom, with students sitting in neat rows, all facing the front of the room. The second picture shows a much more relaxed layout, with students sitting in small clusters, which probably makes group discussion much easier. The two rooms feel like completely different teaching styles.",
+       tips:["ใช้ 'neat rows' และ 'clusters' เป็นคำศัพท์เฉพาะทางในการบรรยายการจัดที่นั่ง","เดาผลลัพธ์จากการจัดที่นั่ง (probably makes group discussion easier) เพื่อแสดงการวิเคราะห์ ไม่ใช่แค่บรรยาย","ปิดท้ายด้วยภาพรวม (completely different teaching styles) เพื่อสรุปการเปรียบเทียบ"],
+       vocab:["neat rows","a cluster","teaching style"]},
+      {time:45, q:"Which of these two classroom styles would you prefer to teach in?",
+       model:"I'd probably lean towards the more flexible layout, since I like being able to move around and work with small groups easily. That said, I think the traditional layout still has its place, especially for activities that need everyone's full attention on the board at the same time.",
+       tips:["ใช้ 'I'd probably lean towards...' แสดงความเห็นแบบนุ่มนวล ไม่ฟันธงเกินไป","ให้เหตุผลส่วนตัว (I like being able to...) เพื่อให้คำตอบมีความเป็นตัวเอง","เพิ่มข้อดีของอีกฝั่งด้วย (still has its place) เพื่อแสดงมุมมองรอบด้าน"],
+       vocab:["lean towards","flexible layout","full attention"]},
+      {time:45, q:"How has teaching changed since you were a student?",
+       model:"When I was a student, lessons were almost always teacher-centred, with the teacher talking and students mostly listening and copying notes. Nowadays, there's a lot more focus on students working together and discovering things themselves, which I think generally leads to more active, engaged learning.",
+       tips:["ใช้ 'When I was a student... Nowadays...' เปรียบเทียบอดีต-ปัจจุบันชัดเจน (โครงสร้างนี้ใช้ซ้ำได้บ่อยในข้อสอบจริง)","ใช้คำศัพท์ทางการศึกษา (teacher-centred) เพื่อเพิ่มความน่าเชื่อถือ","จบด้วยความเห็นส่วนตัวเชิงบวก (leads to more active, engaged learning)"],
+       vocab:["teacher-centred","copying notes","engaged learning"]}
+    ]},
+  { title:"Part Four", kind:"extended", image:"studyNight", prepTime:60, answerTime:120,
+    instruction:"ดูภาพและอ่านคำถาม 3 ข้อ มีเวลาเตรียมตัว 1 นาที (จดโน้ตได้) จากนั้นตอบทั้ง 3 ข้อต่อเนื่องภายใน 2 นาที",
+    caption:"A teacher studying at home in the evening.",
+    subquestions:[
+      "Talk about a course or qualification you would like to complete in the future.",
+      "How do you balance your teaching job with personal study or family life?",
+      "How important is it for teachers to keep studying throughout their career?"
+    ],
+    model:"At some point, I'd really like to complete a further qualification in teaching methodology, since I feel like a lot of my current knowledge comes from experience rather than formal study. Balancing that with a full-time teaching job isn't always easy, to be honest — I usually end up studying late in the evening, after marking and lesson planning are already done. Even so, I think it's extremely important for teachers to keep studying throughout their career, because the subject, the students and even teaching methods themselves keep changing, so standing still isn't really an option.",
+    tips:["ใช้ 'At some point...' เปิดคำตอบข้อ 1 อย่างเป็นธรรมชาติเมื่อพูดถึงแผนอนาคตที่ยังไม่แน่นอน","ใช้ 'Even so...' เชื่อมจากความยากลำบาก (ข้อ 2) ไปสู่ความสำคัญ (ข้อ 3) ได้อย่างลื่นไหล","สำนวน 'standing still isn't really an option' เป็นวิธีปิดคำตอบที่ฟังดูเป็นธรรมชาติและมีน้ำหนัก","ฝึกพูดให้เวลาใกล้เคียงกันทั้ง 3 ข้อ แม้ข้อ 1 อาจสั้นกว่าข้ออื่นได้ตามธรรมชาติ"],
+    vocab:["a qualification","balance (verb)","standing still"]}
+  ]},
+I:{
+  label:"ชุดที่ 9",
+  tag:"เพื่อนร่วมงาน & ความเป็นอยู่ของนักเรียน",
+  parts:[
+  { title:"Part One", kind:"personal",
+    instruction:"ผู้คุมสอบจะถามคำถามสั้น ๆ เกี่ยวกับตัวคุณ 3 ข้อ — ข้อละ 30 วินาที",
+    items:[
+      {time:30, q:"Tell me about the first week you spent at your current school.",
+       model:"My first week was pretty overwhelming, to be honest, since I had to learn everyone's names, the school's routines and the layout of the building all at the same time. Luckily, a couple of colleagues were really welcoming and answered every small question I had, which made things a lot easier.",
+       tips:["ใช้ 'pretty overwhelming' แล้วขยายเหตุผลด้วยการยกตัวอย่างหลายอย่างพร้อมกัน (names, routines, layout)","ใช้ 'Luckily...' เปลี่ยนโทนจากลำบากไปสู่แง่บวก เพื่อให้คำตอบไม่หดหู่เกินไป","หัวข้อ 'first week/first day' ออกสอบจริงบ่อยมาก ควรเตรียมคำศัพท์เกี่ยวกับความรู้สึกช่วงเริ่มงานไว้"],
+       vocab:["overwhelming","routines","welcoming"]},
+      {time:30, q:"What do you enjoy talking about with your colleagues outside of lessons?",
+       model:"We often end up talking about our students, of course, but also just everyday things like food, weekend plans or a TV series someone's been watching. It's nice to have conversations that aren't only about work, since it helps us feel more like a team rather than just co-workers.",
+       tips:["แบ่งคำตอบเป็นหัวข้อเกี่ยวกับงาน (students) กับไม่เกี่ยวกับงาน (food, TV) เพื่อความหลากหลาย","ใช้ 'of course' แสดงว่าหัวข้อแรกเป็นเรื่องคาดเดาได้ ก่อนเสริมหัวข้อที่น่าสนใจกว่า","ปิดท้ายด้วยเหตุผลเชิงความสัมพันธ์ (feel more like a team) เพื่อให้คำตอบมีมิติ"],
+       vocab:["end up (doing something)","co-workers","a team"]},
+      {time:30, q:"Tell me about a game or activity you use to make lessons more fun.",
+       model:"I sometimes use a quick vocabulary race, where students work in small teams to find as many words as possible on a topic within a couple of minutes. It gets pretty noisy, but the students really enjoy the competition, and it's a nice way to review vocabulary without it feeling like a test.",
+       tips:["อธิบายกลไกของเกมสั้น ๆ (small teams, find words, time limit) ให้เห็นภาพชัดเจน","ยอมรับข้อเสียเล็กน้อย (pretty noisy) ก่อนสรุปด้วยข้อดี เพื่อให้คำตอบสมจริง","ใช้ 'without it feeling like a test' เป็นวลีปิดที่แสดงเหตุผลเชิงการสอนได้ดี"],
+       vocab:["a vocabulary race","competition","review (verb)"]}
+    ]},
+  { title:"Part Two", kind:"single", image:"staffMeeting",
+    instruction:"บรรยายภาพ 1 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    caption:"A group of teachers sitting around a table for a staff meeting.",
+    items:[
+      {time:45, q:"Describe this picture.",
+       model:"In this picture, I can see a group of teachers sitting around a table, and it looks like some kind of staff meeting. A few of them seem to be actively discussing something, while others look like they're just listening carefully. The atmosphere seems fairly relaxed, rather than formal or tense.",
+       tips:["แยกบทบาทของคนในภาพ (discussing vs listening) เพื่อให้คำตอบมีรายละเอียดมากกว่าการบรรยายรวม ๆ","ใช้ 'rather than' เปรียบเทียบบรรยากาศที่เป็นไปได้ (relaxed vs formal/tense)","ใช้ 'seem to be / look like' บ่อย ๆ เมื่อตีความอารมณ์ในภาพที่ไม่แน่ใจ 100%"],
+       vocab:["a staff meeting","actively","the atmosphere"]},
+      {time:45, q:"What do teachers usually discuss in staff meetings at your school?",
+       model:"We usually talk about upcoming events, like exams or school trips, and sometimes we discuss specific students who might need extra support. Occasionally, there are also announcements from the school leadership about policy changes, although those meetings tend to be a bit less interactive than the others.",
+       tips:["แบ่งหัวข้อประชุมเป็นหมวดหมู่ (events, students, announcements) เพื่อความครบถ้วน","ใช้ 'although' เชื่อมประโยคสุดท้ายเพื่อแสดงความเห็นเชิงเปรียบเทียบเล็กน้อย","คำว่า 'policy changes' และ 'school leadership' เป็นคำศัพท์ระดับสูงที่เหมาะกับหัวข้อนี้"],
+       vocab:["upcoming events","extra support","policy changes"]},
+      {time:45, q:"How useful do you find staff meetings?",
+       model:"Honestly, it depends a lot on how well they're organised — a focused meeting with a clear agenda can be really useful, but a long meeting without much structure can feel like a waste of time. I think shorter, more frequent meetings usually work better than one long meeting every month.",
+       tips:["ใช้ 'Honestly...' เปิดคำตอบที่มีมุมมองวิจารณ์เล็กน้อยอย่างสุภาพ","เปรียบเทียบสองสถานการณ์ (clear agenda vs no structure) เพื่อแสดงเหตุผลของความเห็น","จบด้วยข้อเสนอแนะที่เป็นรูปธรรม (shorter, more frequent meetings) แทนคำตอบกว้าง ๆ"],
+       vocab:["a clear agenda","a waste of time","frequent"]}
+    ]},
+  { title:"Part Three", kind:"compare", images:["citySchool","ruralSchool"],
+    instruction:"เปรียบเทียบภาพ 2 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    captionA:"A large, modern school building in a city.",
+    captionB:"A small, simple school building in the countryside.",
+    items:[
+      {time:45, q:"Tell me what you see in these two pictures.",
+       model:"The first picture shows a large, modern school building in what looks like a city, with several floors and quite a lot of windows. The second picture shows a much smaller, simpler school in what seems to be a rural area, surrounded by open space and trees. The scale of the two schools is very different.",
+       tips:["ใช้ 'in what looks like / what seems to be' เดาบริบทสถานที่อย่างสมเหตุสมผล","เปรียบเทียบขนาด (scale) เป็นประเด็นหลักของคำตอบข้อนี้","ใช้คำศัพท์เชิงพื้นที่ (surrounded by open space) เพื่อเพิ่มรายละเอียดภาพ"],
+       vocab:["several floors","a rural area","the scale of"]},
+      {time:45, q:"What are the main differences between teaching in a city school and a rural school?",
+       model:"In my experience, city schools usually have more resources and a wider choice of teachers for each subject, while rural schools, like mine, often have to make do with fewer staff and older equipment. On the other hand, rural schools can feel more like a close community, since teachers often know every student's family personally.",
+       tips:["ใช้ 'like mine' เชื่อมโยงกับประสบการณ์จริงของตัวเองถ้าตรงกับบริบท ทำให้คำตอบน่าเชื่อถือ","เปรียบเทียบข้อดี-ข้อเสียของทั้งสองฝั่งอย่างสมดุล (resources vs community)","ใช้ 'make do with' เป็นสำนวนที่แสดงถึงการปรับตัวกับทรัพยากรที่จำกัด"],
+       vocab:["make do with","a close community","personally"]},
+      {time:45, q:"Which do you think is more challenging, and why?",
+       model:"I think they're challenging in different ways, rather than one being simply harder than the other. Rural schools can be tough because of limited resources, while city schools can be challenging because classes are often much larger, so it really depends on which kind of pressure a teacher finds harder to deal with.",
+       tips:["ปฏิเสธการเปรียบเทียบแบบง่าย ๆ (rather than one being simply harder) เพื่อแสดงความคิดที่ละเอียดกว่า","ใช้โครงสร้างคู่ขนาน (X can be tough because... while Y can be challenging because...) ให้คำตอบเป็นระเบียบ","จบด้วย 'it really depends on...' เป็นวลีปิดคำตอบเชิงเปรียบเทียบที่ใช้ซ้ำได้หลายหัวข้อ"],
+       vocab:["in different ways","limited resources","deal with (pressure)"]}
+    ]},
+  { title:"Part Four", kind:"extended", image:"lonelyStudent", prepTime:60, answerTime:120,
+    instruction:"ดูภาพและอ่านคำถาม 3 ข้อ มีเวลาเตรียมตัว 1 นาที (จดโน้ตได้) จากนั้นตอบทั้ง 3 ข้อต่อเนื่องภายใน 2 นาที",
+    caption:"A student sitting alone while other students play together in the background.",
+    subquestions:[
+      "Talk about a time you noticed a student was having a difficult time, socially or emotionally.",
+      "How do you support students' wellbeing in your classroom, beyond just teaching the subject?",
+      "How important is it for teachers to be trained in supporting student mental health?"
+    ],
+    model:"A couple of years ago, I noticed one of my students becoming much quieter than usual and sitting alone during breaks, which was quite different from how she normally behaved. I made a point of checking in with her privately, without making a big deal of it in front of the other students, and it turned out she was going through a difficult time at home. Beyond just teaching my subject, I try to keep an eye on things like that for all my students, even though I'm not trained as a counsellor. Honestly, I think teachers really do need at least some basic training in this area, because we often notice these changes long before anyone else does.",
+    tips:["เล่าเหตุการณ์เฉพาะเจาะจง (a student becoming quieter) ก่อน แล้วค่อยขยายไปวิธีรับมือและความเห็นทั่วไป","ใช้ 'without making a big deal of it' แสดงความละเอียดอ่อนในการดูแลนักเรียน เป็นทักษะภาษาระดับสูง","เชื่อม 3 คำตอบด้วย 'Beyond just teaching...' และ 'Honestly, I think...' ให้ลื่นไหลเป็นเรื่องเดียวกัน","หัวข้อ wellbeing เป็นหัวข้อ 'abstract' แนวใหม่ที่เริ่มพบในข้อสอบจริง ควรเตรียมคำศัพท์ด้านอารมณ์/จิตใจไว้บ้าง"],
+    vocab:["check in with (someone)","going through a difficult time","a counsellor"]}
+  ]},
+J:{
+  label:"ชุดที่ 10",
+  tag:"ข้อสอบ วิธีสอน และอนาคตในอาชีพครู",
+  parts:[
+  { title:"Part One", kind:"personal",
+    instruction:"ผู้คุมสอบจะถามคำถามสั้น ๆ เกี่ยวกับตัวคุณ 3 ข้อ — ข้อละ 30 วินาที",
+    items:[
+      {time:30, q:"Tell me about your last school holiday.",
+       model:"During my last school holiday, I mostly stayed home and rested, since the term before it had been quite exhausting. I did manage to visit my family for a few days too, which was nice, but honestly, most of the time I just enjoyed not having a strict schedule for once.",
+       tips:["ใช้ Past Simple เล่าเหตุการณ์ในวันหยุดที่ผ่านมา อย่าลืมระบุช่วงเวลาให้ชัดเจน (during my last...)","ยอมรับว่าทำอะไร 'ธรรมดา' ได้ (mostly stayed home) ไม่จำเป็นต้องเล่าเรื่องน่าตื่นเต้นเสมอไป","ปิดท้ายด้วยความรู้สึก (enjoyed not having a strict schedule) เพื่อให้คำตอบมีมิติ"],
+       vocab:["exhausting","manage to (do something)","a strict schedule"]},
+      {time:30, q:"How do you feel when the exam period is approaching?",
+       model:"Honestly, I feel a bit more stressed than usual, mainly because there's extra marking and I also want to make sure my students feel prepared and calm. I try to stay organised in the weeks before exams, since that helps me manage the workload without feeling too overwhelmed.",
+       tips:["ยอมรับความเครียดอย่างตรงไปตรงมา (Honestly, I feel...) แทนการตอบแบบเป็นทางการเกินไป","แยกเหตุผลความเครียดเป็นสองส่วน (extra marking + students' feelings) เพื่อความครบถ้วน","ปิดท้ายด้วยวิธีรับมือ (stay organised) เพื่อแสดงว่าไม่ใช่แค่บ่น แต่มีทางออกด้วย"],
+       vocab:["stressed","the workload","stay organised"]},
+      {time:30, q:"Tell me about a lesson that didn't go as planned.",
+       model:"I once planned a group activity that was far too complicated for the time I had, and I ended up having to cut it short halfway through. It was a bit frustrating at the time, but it taught me to always plan a simpler back-up version of any new activity I try.",
+       tips:["ใช้ 'far too complicated' และ 'cut it short' เป็นคำศัพท์ที่ใช้บรรยายบทเรียนที่ผิดพลาดได้ดี","จบด้วยบทเรียนที่ได้ (it taught me to...) แทนการจบด้วยความล้มเหลวเฉย ๆ — ทำให้คำตอบดูเป็นผู้ใหญ่","หัวข้อ 'lesson that went wrong' ออกสอบจริงบ่อย ควรมีเรื่องเล่าเตรียมไว้อย่างน้อยหนึ่งเรื่อง"],
+       vocab:["far too (complicated)","cut (something) short","a back-up version"]}
+    ]},
+  { title:"Part Two", kind:"single", image:"examHall",
+    instruction:"บรรยายภาพ 1 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    caption:"Students sitting individually at spaced-out desks during an exam.",
+    items:[
+      {time:45, q:"Describe this picture.",
+       model:"In this picture, I can see students sitting individually at desks that have been spaced quite far apart, which makes me think it's an exam. There's a clock visible on the wall too, so time management is probably part of the task. Everyone looks quiet and focused, which is fairly typical for this kind of situation.",
+       tips:["สังเกตรายละเอียดที่บ่งบอกบริบท (spaced-out desks, a clock) แล้วใช้เดาสถานการณ์อย่างมีเหตุผล","ใช้ 'which makes me think...' เพื่อแสดงการอนุมานจากสิ่งที่เห็นในภาพ","ปิดท้ายด้วยลักษณะบรรยากาศทั่วไป (fairly typical for this kind of situation)"],
+       vocab:["spaced (out)","time management","typical"]},
+      {time:45, q:"How do you help students manage exam stress?",
+       model:"I try to remind students that one exam doesn't define them, which sounds simple but genuinely helps some of them relax a little. Practically, I also give them some past papers to practise with beforehand, so the format itself doesn't feel unfamiliar or frightening on the actual day.",
+       tips:["แยกความช่วยเหลือเป็นด้านจิตใจ (doesn't define them) กับด้านปฏิบัติ (past papers) เพื่อความครบถ้วน","ใช้ 'which sounds simple but genuinely helps' แสดงความเห็นที่มีมิติ ไม่ใช่คำตอบผิวเผิน","คำว่า 'unfamiliar' และ 'frightening' ช่วยอธิบายความรู้สึกของนักเรียนได้ตรงประเด็น"],
+       vocab:["define (someone)","past papers","unfamiliar"]},
+      {time:45, q:"Do you think there is too much emphasis on exams in education today?",
+       model:"To some extent, yes — I think exams are useful for measuring certain skills, but they don't really show the whole picture of a student's ability. I'd like to see more balance, with things like projects or presentations counting for more, rather than everything depending on one single test.",
+       tips:["ใช้ 'To some extent, yes...' เป็นวิธีตอบคำถามความเห็นแบบมีเงื่อนไข ไม่ใช่ yes/no ตรง ๆ","เสนอทางเลือกที่เป็นรูปธรรม (projects or presentations) แทนวิจารณ์ระบบเฉย ๆ","ใช้ 'the whole picture' เป็นสำนวนที่ช่วยแสดงความเห็นเชิงวิพากษ์อย่างสุภาพ"],
+       vocab:["to some extent","measure (skills)","the whole picture"]}
+    ]},
+  { title:"Part Three", kind:"compare", images:["textbookLesson","mediaLesson"],
+    instruction:"เปรียบเทียบภาพ 2 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    captionA:"A student reading from a printed textbook at their desk.",
+    captionB:"A student watching a video with headphones on at their desk.",
+    items:[
+      {time:45, q:"Tell me what you see in these two pictures.",
+       model:"The first picture shows a student reading quietly from a printed textbook, which looks like a fairly traditional, self-paced kind of study. The second picture shows a student wearing headphones and watching something on a screen, which is probably a video or listening exercise. Both students seem equally focused, just using very different kinds of materials.",
+       tips:["ใช้ 'self-paced' เป็นคำศัพท์เฉพาะทางที่อธิบายลักษณะการเรียนจากหนังสือได้ดี","เดาชนิดสื่อในภาพที่สอง (probably a video or listening exercise) อย่างสมเหตุสมผล","ปิดท้ายด้วยจุดร่วม (equally focused) ก่อนเน้นความต่าง (materials) เพื่อความครบถ้วน"],
+       vocab:["self-paced","a listening exercise","materials"]},
+      {time:45, q:"Which approach do you think helps students learn a language more effectively?",
+       model:"I don't think one is definitely better than the other — textbooks are great for building solid grammar and vocabulary, while authentic media like videos exposes students to more natural, real-life language. In my experience, a combination of both usually works best, rather than relying on just one type of material.",
+       tips:["ปฏิเสธการเลือกฝั่งเดียวตั้งแต่ต้น (I don't think one is definitely better) เพื่อแสดงมุมมองที่สมดุล","เปรียบเทียบจุดแข็งของแต่ละฝั่งอย่างชัดเจน (solid grammar vs natural language)","ปิดท้ายด้วยข้อเสนอ 'a combination of both' ซึ่งเป็นคำตอบที่กรรมการมักให้คะแนนดีเพราะแสดงความคิดที่รอบด้าน"],
+       vocab:["authentic media","expose (students) to","a combination of"]},
+      {time:45, q:"How do you decide when to use authentic materials like songs or videos in your teaching?",
+       model:"It really depends on the lesson's goal — if I want students to notice natural pronunciation or informal expressions, a short video or song usually works well. But if the goal is to practise a specific grammar point carefully, I tend to stick with more controlled textbook material instead.",
+       tips:["เชื่อมโยงการตัดสินใจกับเป้าหมายบทเรียน (the lesson's goal) เพื่อแสดงกระบวนการคิดเชิงการสอน","ใช้ 'tend to' แสดงพฤติกรรมที่ทำเป็นส่วนใหญ่ ไม่ใช่ทุกครั้งแบบตายตัว","เปรียบเทียบสถานการณ์สองแบบ (natural pronunciation vs specific grammar point) เพื่อความชัดเจน"],
+       vocab:["informal expressions","controlled material","tend to"]}
+    ]},
+  { title:"Part Four", kind:"extended", image:"futurePlans", prepTime:60, answerTime:120,
+    instruction:"ดูภาพและอ่านคำถาม 3 ข้อ มีเวลาเตรียมตัว 1 นาที (จดโน้ตได้) จากนั้นตอบทั้ง 3 ข้อต่อเนื่องภายใน 2 นาที",
+    caption:"A teacher standing at a fork in the path, looking ahead.",
+    subquestions:[
+      "Talk about your plans for your teaching career over the next few years.",
+      "How do you think teaching, as a profession, might change in the future?",
+      "What advice would you give to someone thinking about becoming a teacher?"
+    ],
+    model:"Over the next few years, I'd like to take on a bit more responsibility at school, maybe supporting newer teachers, while also continuing to improve my own English. As for the profession in general, I think teaching will probably rely more on technology and data to track student progress, although I don't think the core job — actually connecting with students — will ever really change. If I had to give advice to someone thinking about becoming a teacher, I'd tell them to go in with realistic expectations: it's genuinely rewarding, but it's also far more demanding than most people expect before they start.",
+    tips:["ใช้ 'Over the next few years...' เปิดคำตอบข้อ 1 ให้ชัดเจนว่าเป็นแผนระยะสั้น-กลาง","เชื่อม 'As for the profession in general...' และ 'If I had to give advice...' เพื่อร้อยเรียง 3 คำตอบให้เป็นเรื่องเดียวกัน","ใช้ 'go in with realistic expectations' เป็นคำแนะนำที่ฟังดูมีประสบการณ์จริง ไม่ใช่คำแนะนำผิวเผิน","หัวข้ออนาคต/คำแนะนำอาชีพเป็นหนึ่งใน abstract topics ที่พบได้จริงในพาร์ท 4 ควรฝึกให้คล่องเพราะต้องใช้ทั้งอดีต-ปัจจุบัน-อนาคตในคำตอบเดียว"],
+    vocab:["take on responsibility","track progress","realistic expectations"]}
+  ]},
+K:{
+  label:"ชุดที่ 11",
+  tag:"สอนนักเรียนที่หลากหลายระดับความสามารถ",
+  parts:[
+  { title:"Part One", kind:"personal",
+    instruction:"ผู้คุมสอบจะถามคำถามสั้น ๆ เกี่ยวกับตัวคุณ 3 ข้อ — ข้อละ 30 วินาที",
+    items:[
+      {time:30, q:"What did you study at university, and how did you end up becoming a teacher?",
+       model:"I actually studied chemistry at university, not education, so I didn't originally plan to become a teacher. I took a teaching course afterwards almost by chance, and I ended up enjoying it so much that I never looked back.",
+       tips:["ใช้ 'actually' เมื่อคำตอบอาจไม่ตรงกับที่คาดไว้ (ไม่ได้เรียนครูโดยตรง) เพื่อเตรียมผู้ฟัง","เล่าลำดับเหตุการณ์ด้วย Past Simple ให้ชัดเจน (studied, took, ended up)","ปิดท้ายด้วยวลี 'never looked back' เป็นสำนวนธรรมชาติที่แสดงความรู้สึกเชิงบวก"],
+       vocab:["by chance","never looked back","end up (doing something)"]},
+      {time:30, q:"Tell me about a hobby or interest you have outside teaching.",
+       model:"Outside of school, I really enjoy gardening, even though I'm not particularly good at it. It's a nice contrast to teaching, because there's no talking involved — I can just focus quietly on one small task at a time, which I find very relaxing after a busy week.",
+       tips:["ใช้ 'even though' ยอมรับจุดอ่อนของตัวเองอย่างเป็นธรรมชาติ ไม่ต้องสมบูรณ์แบบ","เปรียบเทียบงานอดิเรกกับอาชีพครู (a nice contrast to teaching) เพื่อให้คำตอบมีมิติมากกว่าการบรรยายเฉย ๆ","จบด้วยเหตุผลว่าทำไมชอบกิจกรรมนี้ (relaxing after a busy week)"],
+       vocab:["a nice contrast","focus on","relaxing"]},
+      {time:30, q:"How do you usually spend the school holidays?",
+       model:"For the first week or so, I usually just rest and catch up on sleep, since the term can be quite exhausting. After that, I try to do something more productive, like visiting family or taking a short trip, before I start thinking about planning for the next term.",
+       tips:["แบ่งคำตอบเป็นช่วงเวลา (for the first week... after that...) ให้เห็นลำดับชัดเจน","ใช้ 'before I start thinking about...' ปิดท้ายแบบธรรมชาติ แสดงว่าชีวิตครูวนกลับมาเตรียมเทอมใหม่","หัวข้อวันหยุด/การพักผ่อนเป็นหัวข้อ Part 1 ที่พบได้บ่อย ควรมีคำศัพท์เกี่ยวกับการพักผ่อนติดตัว"],
+       vocab:["catch up on sleep","exhausting","productive"]}
+    ]},
+  { title:"Part Two", kind:"single", image:"mixedAbility",
+    instruction:"บรรยายภาพ 1 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    caption:"A teacher helping one group of students while others work independently on a different task.",
+    items:[
+      {time:45, q:"Describe this picture.",
+       model:"In this picture, I can see a teacher leaning over to help one group of students at their desks, while two other groups continue working on their own, without direct supervision. It looks like the class has been split into smaller groups, possibly working on tasks at slightly different levels of difficulty.",
+       tips:["ใช้ 'while' เชื่อมสองเหตุการณ์ที่เกิดพร้อมกันในภาพ (ครูช่วยกลุ่มหนึ่ง ขณะที่กลุ่มอื่นทำงานเอง)","เดาบริบทเพิ่มเติมด้วย 'possibly' เมื่อไม่แน่ใจ 100%","คำว่า 'without direct supervision' ช่วยแสดง vocabulary ระดับสูงขึ้นสำหรับหัวข้อการจัดการชั้นเรียน"],
+       vocab:["lean over","supervision","split into groups"]},
+      {time:45, q:"How do you plan lessons for a class with very different levels of ability?",
+       model:"I usually plan one core task that every student can access, and then add an extra, slightly harder challenge for students who finish early, rather than creating completely separate lessons. It takes a bit more preparation time, but it means nobody is just sitting there with nothing to do.",
+       tips:["ใช้ 'rather than' เปรียบเทียบวิธีที่คุณเลือกใช้กับวิธีอื่นที่ไม่เลือก เพื่อแสดงเหตุผล","ยอมรับต้นทุน (takes a bit more preparation time) ก่อนอธิบายว่าทำไมยังคุ้มค่า","ปิดท้ายด้วยผลลัพธ์เชิงบวกที่เป็นรูปธรรม (nobody is just sitting there)"],
+       vocab:["core task","an extra challenge","preparation time"]},
+      {time:45, q:"What challenges do you face when some students finish work much faster than others?",
+       model:"The main challenge is making sure fast finishers stay engaged without just giving them busy work that doesn't really add anything. I try to have a short extension task ready in advance, so I'm not scrambling to find something for them while also still helping students who are struggling.",
+       tips:["ใช้ 'The main challenge is...' เปิดคำตอบให้ตรงประเด็นทันที","คำว่า 'busy work' เป็นศัพท์เฉพาะทางการศึกษาที่แสดงความเข้าใจเชิงลึก","ปิดท้ายด้วยสถานการณ์จริงที่ครูเจอ (scrambling to find something) เพื่อให้คำตอบสมจริง"],
+       vocab:["fast finishers","busy work","an extension task"]}
+    ]},
+  { title:"Part Three", kind:"compare", images:["mixedAbility","stationsLearning"],
+    instruction:"เปรียบเทียบภาพ 2 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    captionA:"A teacher helping one group while others work independently on a different task.",
+    captionB:"Students working in small groups at different learning stations around the room.",
+    items:[
+      {time:45, q:"Tell me what you see in these two pictures.",
+       model:"Both pictures show students working in small groups rather than as a whole class. In the first picture, the teacher is focusing on one particular group, while the others continue alone. In the second picture, there's no single group being directly taught — instead, all the groups seem to be moving between different stations, each one doing something slightly different.",
+       tips:["ใช้ 'Both pictures show...' เปิดด้วยจุดร่วมก่อนแยกอธิบายความต่าง","ใช้ 'instead' เพื่อเน้นความแตกต่างเชิงโครงสร้างของสองภาพ (focused group vs rotating stations)","คำว่า 'moving between different stations' เป็นศัพท์เฉพาะที่ตรงกับแนวคิดการสอนแบบ station learning"],
+       vocab:["as a whole class","focus on","move between (stations)"]},
+      {time:45, q:"Which of these two approaches do you find more effective for teaching a mixed-ability class?",
+       model:"I think it really depends on the class, but I personally lean towards the second approach, with learning stations, because every group stays active and nobody has to just wait for their turn with the teacher. That said, it does take more planning beforehand, and it can be harder to monitor every group closely at the same time.",
+       tips:["ใช้ 'it really depends on...' ก่อนให้ความเห็นส่วนตัว เพื่อแสดงว่ามองหลายมุม ไม่ใช่ฟันธงทันที","ใช้ 'lean towards' แทน 'prefer' เพื่อความหลากหลายของคำศัพท์","เพิ่มข้อจำกัดของแนวทางที่เลือก (harder to monitor) แสดงมุมมองที่สมดุล"],
+       vocab:["lean towards","active","monitor (a group)"]},
+      {time:45, q:"How do you make sure stronger students stay challenged while others get the support they need?",
+       model:"I try to build in some open-ended tasks that stronger students can take further on their own, while I spend more direct time with students who need extra support. It's a constant balancing act, to be honest, and I don't always get it exactly right, but checking in regularly with every group helps a lot.",
+       tips:["ใช้ 'open-ended tasks' เป็นคำศัพท์เฉพาะทางการศึกษาที่แสดงความเข้าใจลึก","ยอมรับว่าไม่ได้ทำได้สมบูรณ์แบบเสมอ (to be honest, I don't always get it exactly right) ทำให้คำตอบน่าเชื่อถือ","ปิดท้ายด้วยวิธีแก้ปัญหาที่ใช้จริง (checking in regularly) แทนการพูดลอย ๆ"],
+       vocab:["open-ended task","a balancing act","check in with"]}
+    ]},
+  { title:"Part Four", kind:"extended", image:"oneToOneSupport", prepTime:60, answerTime:120,
+    instruction:"ดูภาพและอ่านคำถาม 3 ข้อ มีเวลาเตรียมตัว 1 นาที (จดโน้ตได้) จากนั้นตอบทั้ง 3 ข้อต่อเนื่องภายใน 2 นาที",
+    caption:"A teacher kneeling beside a student's desk, giving one-to-one support.",
+    subquestions:[
+      "Talk about a student who needed extra support to keep up with the rest of the class.",
+      "How do you feel about having students with very different ability levels in the same class?",
+      "How important is it for teachers to receive training in differentiation or inclusive teaching?"
+    ],
+    model:"I once had a student who was really struggling to keep up in chemistry, mainly because her reading skills weren't as strong as the rest of the class, so even understanding the questions took her much longer. I started giving her simplified instructions and extra time, and by the end of the term she was managing almost as well as everyone else, which was genuinely rewarding to see. Honestly, I have mixed feelings about teaching classes with very different ability levels — it's rewarding when it goes well, but it's also exhausting trying to meet everyone's needs at once. That's exactly why I think training in differentiation is so important; without it, teachers are often just guessing what might work, based on trial and error alone.",
+    tips:["เริ่มด้วยเรื่องเล่าเฉพาะเจาะจง (a student who...) พร้อมรายละเอียดเชิงสาเหตุ (mainly because...) เพื่อให้คำตอบมีความลึก","ใช้ 'Honestly, I have mixed feelings about...' แสดงความรู้สึกที่ซับซ้อน ไม่ใช่แค่บวกหรือลบด้านเดียว — กรรมการมักประทับใจคำตอบที่ไม่ขาวดำเกินไป","เชื่อมข้อ 2 กับข้อ 3 ด้วย 'That's exactly why...' เพื่อให้เป็นเหตุเป็นผลต่อเนื่องกัน","คำว่า 'trial and error' เป็นสำนวนที่ใช้ได้ดีเมื่อพูดถึงการทำงานแบบไม่มีการฝึกอบรมรองรับ"],
+    vocab:["keep up with","mixed feelings","trial and error","differentiation"]}
+  ]},
+L:{
+  label:"ชุดที่ 12",
+  tag:"สอนนอกกรอบห้องเรียน และความทรงจำที่ภูมิใจ",
+  parts:[
+  { title:"Part One", kind:"personal",
+    instruction:"ผู้คุมสอบจะถามคำถามสั้น ๆ เกี่ยวกับตัวคุณ 3 ข้อ — ข้อละ 30 วินาที",
+    items:[
+      {time:30, q:"Tell me about a lesson you taught outside the normal classroom, for example outdoors or in a special room.",
+       model:"A while ago, I took my class outside to collect leaves and soil samples for a simple science activity. It was a bit chaotic at first, since students weren't used to working outside, but once they settled in, they were far more engaged than they usually are sitting at their desks.",
+       tips:["ใช้ 'A while ago...' เปิดเรื่องเล่าแบบไม่ต้องระบุเวลาที่แน่นอน เหมาะกับคำถามความทรงจำทั่วไป","ยอมรับความไม่เรียบร้อยช่วงแรก (a bit chaotic at first) ก่อนเล่าผลลัพธ์ที่ดีขึ้น เพื่อให้คำตอบมีพัฒนาการ","เปรียบเทียบกับการเรียนปกติ (than they usually are sitting at their desks) เพื่อแสดงเหตุผลว่าทำไมมันพิเศษ"],
+       vocab:["chaotic","settle in","engaged"]},
+      {time:30, q:"What games or activities did you enjoy most as a child?",
+       model:"As a child, I spent a lot of time playing simple outdoor games with the neighbourhood kids, like hide-and-seek and a local version of tag. We didn't have many toys, to be honest, so we mostly made up our own games, which I think actually made us quite creative.",
+       tips:["ใช้ 'As a child...' + Past Simple เล่าความทรงจำวัยเด็กอย่างเป็นธรรมชาติ","ยกตัวอย่างเกมเฉพาะเจาะจง (hide-and-seek) แทนพูดกว้าง ๆ ว่า 'outdoor games'","ปิดท้ายด้วยข้อคิดที่ได้จากประสบการณ์ (made us quite creative) เพื่อให้คำตอบมีความลึก"],
+       vocab:["make up (a game)","to be honest","creative"]},
+      {time:30, q:"Tell me about a public holiday or festival you especially enjoy in your country.",
+       model:"I really enjoy Songkran, the Thai New Year festival, mainly because it's one of the few times the whole family gets together, even relatives who live far away. It's also just a lot of fun — the water fights can get a little extreme, but it always feels more like a big celebration than a formal holiday.",
+       tips:["ระบุชื่อเทศกาลเฉพาะเจาะจง (Songkran) พร้อมคำอธิบายสั้น ๆ (the Thai New Year festival) สำหรับผู้ฟังที่อาจไม่คุ้นเคย","ให้เหตุผลสองข้อ (family gathering + fun) เพื่อให้คำตอบมีมิติ","ใช้ 'can get a little extreme' เป็นสำนวนที่แสดงอารมณ์ขันเล็กน้อยอย่างเป็นธรรมชาติ"],
+       vocab:["get together","a water fight","a celebration"]}
+    ]},
+  { title:"Part Two", kind:"single", image:"outdoorLesson",
+    instruction:"บรรยายภาพ 1 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    caption:"A teacher holding a lesson outdoors, with students sitting on the grass under a tree.",
+    items:[
+      {time:45, q:"Describe this picture.",
+       model:"In this picture, a teacher is sitting with a small group of students outdoors, under what looks like a large tree, rather than in a normal classroom. The students seem relaxed and comfortable, and the whole scene has a much more informal feel than a typical lesson indoors.",
+       tips:["ใช้ 'rather than' เปรียบเทียบฉากในภาพกับห้องเรียนปกติ เพื่อแสดงความแตกต่างที่สังเกตได้","คำว่า 'informal feel' ช่วยบรรยายบรรยากาศ ไม่ใช่แค่วัตถุในภาพ","ใช้ 'what looks like' เมื่อไม่แน่ใจรายละเอียดบางอย่าง (ชนิดต้นไม้) 100%"],
+       vocab:["outdoors","informal","a typical lesson"]},
+      {time:45, q:"What are the benefits of taking a lesson outside the normal classroom?",
+       model:"I find that students are often more relaxed and willing to talk outside, maybe because it doesn't feel as formal as sitting behind a desk. It's also a nice change of scenery for everyone, including the teacher, and certain subjects, like science or art, can genuinely benefit from being taught somewhere more hands-on.",
+       tips:["ใช้ 'maybe because...' เสนอเหตุผลแบบไม่ฟันธงเกินไป ฟังเป็นธรรมชาติ","ระบุวิชาที่ได้ประโยชน์ชัดเจน (science or art) แทนพูดกว้าง ๆ ว่า 'some subjects'","วลี 'a change of scenery' เป็นสำนวนที่ใช้ได้ดีกับหัวข้อนี้โดยเฉพาะ"],
+       vocab:["a change of scenery","hands-on","willing to"]},
+      {time:45, q:"How do you use games or creative activities in your teaching?",
+       model:"I try to build in a short game or creative task at least once a week, often as a way to review vocabulary or a topic we've already covered, rather than teaching something completely new. Students tend to remember things much better when they've had fun learning them, rather than just copying notes from the board.",
+       tips:["ระบุความถี่ที่ใช้งาน (at least once a week) เพื่อให้คำตอบเป็นรูปธรรม ไม่ใช่พูดลอย ๆ","ใช้ 'rather than' สองครั้งในคำตอบเพื่อเปรียบเทียบวิธีที่เลือกกับวิธีดั้งเดิม","ปิดท้ายด้วยเหตุผลเชิงการเรียนรู้ (remember things much better) เพื่อสนับสนุนความเห็น"],
+       vocab:["build in (an activity)","review (vocabulary)","copy notes"]}
+    ]},
+  { title:"Part Three", kind:"compare", images:["outdoorLesson","gameBasedLesson"],
+    instruction:"เปรียบเทียบภาพ 2 ภาพ จากนั้นตอบคำถามต่อเนื่องอีก 2 ข้อ — ข้อละ 45 วินาที",
+    captionA:"A lesson taking place outdoors, under a tree.",
+    captionB:"Students playing an educational game together at a table.",
+    items:[
+      {time:45, q:"Tell me what you see in these two pictures.",
+       model:"The first picture shows a lesson taking place outdoors, with students sitting on the grass under a tree. The second picture shows students indoors, playing some kind of educational game together at a table. Both pictures show a lesson that's clearly different from a normal, formal classroom setting.",
+       tips:["ใช้โครงสร้างคู่ขนาน 'The first picture shows... The second picture shows...' ให้เป็นธรรมชาติ","ปิดท้ายด้วยจุดร่วมของทั้งสองภาพ (different from a normal, formal classroom) เพื่อสรุปให้ครบ","คำว่า 'some kind of' ใช้ได้ดีเมื่อไม่แน่ใจรายละเอียดของเกมในภาพ"],
+       vocab:["indoors","educational game","formal setting"]},
+      {time:45, q:"Which of these two approaches do you think helps students remember what they've learned better?",
+       model:"I'd say it really depends on the subject and the students, but personally, I think the game-based approach probably has a slight edge, since it usually involves repeating information in a fun, low-pressure way. That said, outdoor lessons can create really memorable experiences too, just in a different way — through the experience itself rather than repetition.",
+       tips:["ใช้ 'has a slight edge' แทน 'is better' เพื่อแสดงความเห็นที่ไม่ฟันธงเกินไป","เปรียบเทียบกลไกการจำสองแบบ (repetition vs experience) เพื่อแสดงความคิดเชิงลึก","ปิดท้ายด้วย 'in a different way' เพื่อไม่ให้ฟังเหมือนปฏิเสธอีกตัวเลือกไปเลย"],
+       vocab:["a slight edge","low-pressure","memorable"]},
+      {time:45, q:"How important is it to make lessons fun as well as educational?",
+       model:"I think it's genuinely important, because students who are enjoying a lesson tend to pay more attention and take part more willingly, without me having to constantly ask them to focus. That said, fun shouldn't completely replace structure — a lesson still needs clear learning objectives, otherwise the activity itself becomes the only thing students remember.",
+       tips:["ให้ระดับความสำคัญชัดเจนตั้งแต่ต้น (genuinely important) พร้อมเหตุผล","เพิ่มข้อควรระวัง (fun shouldn't completely replace structure) เพื่อแสดงมุมมองที่สมดุล ไม่ใช่เชียร์ด้านเดียว","คำว่า 'learning objectives' เป็นศัพท์เฉพาะทางการศึกษาที่ช่วยยกระดับคำตอบ"],
+       vocab:["take part willingly","structure (noun)","learning objectives"]}
+    ]},
+  { title:"Part Four", kind:"extended", image:"proudMoment", prepTime:60, answerTime:120,
+    instruction:"ในพาร์ทนี้ภาพเป็นเพียง 'ฉากตั้งเรื่อง' เท่านั้น — ไม่ต้องบรรยายภาพ! ให้อ่านคำถาม 3 ข้อ เตรียมตัว 1 นาที แล้วเล่าความทรงจำต่อเนื่องภายใน 2 นาที",
+    caption:"(ภาพนี้เป็นแค่ฉากตั้งเรื่อง ไม่ต้องบรรยายภาพในคำตอบของคุณ)",
+    subquestions:[
+      "Tell me about a moment in your teaching career that you are especially proud of.",
+      "How did you feel at that moment?",
+      "What does that moment tell you about why you became a teacher?"
+    ],
+    model:"I think the moment I'm proudest of was when a student who had always struggled with chemistry, and had told me more than once that she hated the subject, came back to thank me after her final exams because she'd actually passed, and said she'd started to enjoy it by the end. I'll admit I got a little emotional, because I'd genuinely wondered, at times, whether I was getting through to her at all. Looking back, that moment reminds me that teaching isn't really about getting every student to love your subject — it's about not giving up on the ones who are struggling, and I think that's exactly why I became a teacher in the first place.",
+    tips:["เล่าความทรงจำด้วยรายละเอียดเฉพาะเจาะจง (a student who... came back to thank me) แทนพูดกว้าง ๆ ว่า 'a proud moment'","ใช้ 'I'll admit...' แสดงความรู้สึกส่วนตัวอย่างตรงไปตรงมา ทำให้คำตอบมีความจริงใจ","ใช้ 'Looking back, that moment reminds me that...' เชื่อมจากเรื่องเล่าไปสู่ข้อคิดสรุปในข้อสุดท้ายอย่างลื่นไหล","ฝึกใช้ narrative tenses (had always struggled, had told me, 'd passed) ให้คล่อง เพราะพาร์ท 4 แบบเล่าความทรงจำมักให้คะแนนสูงกับความหลากหลายของ tense"],
+    vocab:["get through to (someone)","not giving up on","in the first place"]}
+  ]}
+};
+
+/* ============================= APP STATE ============================= */
+let state = { screen:'landing', setKey:null, partIdx:0, itemIdx:0, phase:'record', recordings:{} };
+let timerHandle=null, mediaRecorder=null, mediaChunks=[], micOK=null, waveHandle=null, mediaStream=null, discardOnStop=false;
+
+function el(id){return document.getElementById(id);}
+function render(){ el('app').innerHTML = screens[state.screen](); afterRender(); }
+
+/* ============================= SCREENS ============================= */
+const PART_LABELS=["Part 1","Part 2","Part 3","Part 4"];
+
+function rail(){
+  if(state.screen==='landing') return '';
+  return `<div class="railwrap"><div class="brand"><div class="brand-name"><b>Aptis for Teachers</b> — Speaking Practice</div>
+    <div class="brand-name">${state.setKey?SETS[state.setKey].label:''}</div></div>
+    <div class="rail">${PART_LABELS.map((l,i)=>{
+      const cls = i<state.partIdx?'done':(i===state.partIdx && state.screen!=='summary'?'active':'');
+      return `<div class="rail-step ${state.screen==='summary'?'done':cls}"><div class="bar"></div><div class="lbl">${l}</div></div>`;
+    }).join('')}</div></div>`;
+}
+
+const screens = {
+landing(){
+  return `${rail()}
+  <div class="card">
+    <div class="eyebrow">ฝึกซ้อมก่อนสอบจริง</div>
+    <h1 class="pagetitle">Aptis for Teachers — Speaking</h1>
+    <p class="lede">จำลองโครงสร้างข้อสอบพูด 4 พาร์ท พร้อมจับเวลาแบบเดียวกับห้องสอบจริง อัดเสียงตัวเอง (ถ้าเบราว์เซอร์อนุญาต) แล้วเทียบกับตัวอย่างคำตอบและคำแนะนำเป็นภาษาไทยหลังตอบแต่ละข้อ</p>
+    <div class="structure">
+      <b class="serif" style="font-size:15px;">โครงสร้างข้อสอบ (รวมประมาณ 12 นาที)</b>
+      <ol>
+        <li><b>Part 1</b> — คำถามเกี่ยวกับตัวคุณ 3 ข้อ ข้อละ 30 วินาที</li>
+        <li><b>Part 2</b> — บรรยายภาพ 1 ภาพ + ตอบต่ออีก 2 ข้อ ข้อละ 45 วินาที</li>
+        <li><b>Part 3</b> — เปรียบเทียบ 2 ภาพ + ตอบต่ออีก 2 ข้อ ข้อละ 45 วินาที</li>
+        <li><b>Part 4</b> — ดูภาพ+อ่าน 3 คำถาม เตรียมตัว 1 นาที แล้วตอบทั้งหมดภายใน 2 นาที</li>
+      </ol>
+    </div>
+    <div class="structure">
+      <b class="serif" style="font-size:15px;">เลือกชุดฝึกซ้อม</b>
+      <div class="setgrid">
+        ${Object.entries(SETS).map(([k,v])=>`
+          <button class="setcard ${state.setKey===k?'picked':''}" onclick="pickSet('${k}')">
+            <h3>${v.label}</h3><p>${v.tag}</p>
+          </button>`).join('')}
+      </div>
+    </div>
+    <div class="btnrow">
+      <button class="btn" ${state.setKey?'':'disabled'} onclick="startTest()">เริ่มฝึกซ้อม</button>
+    </div>
+  </div>`;
+},
+
+partIntro(){
+  const part = SETS[state.setKey].parts[state.partIdx];
+  return `${rail()}
+  <div class="card">
+    <div class="eyebrow">${part.title}</div>
+    <h2 class="pagetitle">คำชี้แจง</h2>
+    <p class="lede">${part.instruction}</p>
+    <div class="btnrow">
+      <button class="btn ghost" onclick="goPrevious()">← ย้อนกลับ</button>
+      <button class="btn" onclick="beginPart()">เริ่มพาร์ทนี้</button>
+    </div>
+  </div>`;
+},
+
+record(){
+  const part = SETS[state.setKey].parts[state.partIdx];
+  if(part.kind==='extended') return screens.extended();
+  const item = part.items[state.itemIdx];
+  let media='';
+  if(part.kind==='single'){
+    media = ILLUS[part.image] + `<div class="scene-cap">${part.caption}</div>`;
+  } else if(part.kind==='compare'){
+    media = `<div class="compare-scenes">${ILLUS[part.images[0]]}${ILLUS[part.images[1]]}</div>
+      <div class="scene-cap">Left: ${part.captionA} &nbsp;·&nbsp; Right: ${part.captionB}</div>`;
+  }
+  return `${rail()}
+  <div class="exam">
+    <div class="prompt-pane">
+      <div class="kicker">Speaking · ${part.title}</div>
+      <h2 class="stepname">ข้อ ${state.itemIdx+1} จาก ${part.items.length}</h2>
+      ${media}
+      <div class="question-text">${item.q}</div>
+    </div>
+    ${recPanel(item.time)}
+  </div>`;
+},
+
+extended(){
+  const part = SETS[state.setKey].parts[state.partIdx];
+  const isPrep = state.phase==='prep';
+  return `${rail()}
+  <div class="exam">
+    <div class="prompt-pane">
+      <div class="kicker">Speaking · ${part.title}</div>
+      <h2 class="stepname">${isPrep? 'เตรียมตัว 1 นาที' : 'ตอบทั้ง 3 ข้อ ภายใน 2 นาที'}</h2>
+      ${ILLUS[part.image]}
+      <div class="scene-cap">${part.caption}</div>
+      <ol class="subq-list">${part.subquestions.map(q=>`<li>${q}</li>`).join('')}</ol>
+      ${isPrep? `<textarea class="think-notes" id="notes" placeholder="จดคำสำคัญสั้น ๆ ที่นี่ได้ (ไม่บังคับ)"></textarea>` : ''}
+    </div>
+    ${recPanel(isPrep?part.prepTime:part.answerTime, isPrep)}
+  </div>`;
+},
+
+review(){
+  const part = SETS[state.setKey].parts[state.partIdx];
+  const isExt = part.kind==='extended';
+  return `${rail()}
+  <div class="card" style="margin-bottom:18px;">
+    <div class="eyebrow">${part.title} · เฉลยแนวทาง</div>
+    <h2 class="pagetitle">ทบทวนคำตอบของคุณ</h2>
+    <p class="lede">ฟังเสียงที่อัดไว้ของคุณ แล้วเทียบกับตัวอย่างคำตอบและคำแนะนำด้านล่าง</p>
+  </div>
+  ${isExt? reviewExtended(part) : reviewItems(part)}
+  <div class="criteria-note"><b>เกณฑ์การให้คะแนน Speaking โดยทั่วไป:</b> ความถูกต้อง/ความหลากหลายของไวยากรณ์และคำศัพท์ (Grammar & Vocabulary), การเรียบเรียงความคิดให้ต่อเนื่อง (Discourse Management), และการออกเสียง (Pronunciation) — ควรตอบให้ครบเวลาที่กำหนดและมีการเชื่อมประโยคด้วยคำเชื่อมอย่างสม่ำเสมอ</div>
+  <div class="btnrow">
+    <button class="btn ghost" onclick="goPrevious()">← ย้อนกลับไปทำใหม่</button>
+    <button class="btn" onclick="nextPart()">${state.partIdx<3?'ไปพาร์ทถัดไป':'ดูสรุปผล'}</button>
+  </div>`;
+},
+
+summary(){
+  return `${rail()}
+  <div class="card">
+    <div class="eyebrow">เสร็จสิ้นการฝึกซ้อม</div>
+    <h1 class="pagetitle">ทำครบทั้ง 4 พาร์ทแล้ว 🎉</h1>
+    <p class="lede">ลองประเมินตัวเองตามหัวข้อด้านล่าง ก่อนกลับไปฝึกซ้ำ หรือเปลี่ยนไปลองอีกชุดหนึ่ง</p>
+    <div class="checklist">
+      ${["ฉันตอบได้จนเกือบครบเวลาที่กำหนดในแต่ละข้อ (ไม่เงียบเร็วเกินไป)",
+         "ฉันใช้คำเชื่อมประโยค เช่น because, although, so, which ในคำตอบ",
+         "ฉันให้เหตุผลประกอบความเห็นทุกครั้ง ไม่ตอบสั้นห้วน ๆ",
+         "ในพาร์ท 4 ฉันแบ่งเวลาตอบทั้ง 3 คำถามใกล้เคียงกัน ไม่หมดเวลากับข้อแรก",
+         "ฉันฟังเสียงตัวเองแล้วสังเกตจุดที่ออกเสียงไม่ชัดหรือพูดติดขัด"
+      ].map(t=>`<label class="checkrow"><input type="checkbox"><span>${t}</span></label>`).join('')}
+    </div>
+    <div class="btnrow">
+      <button class="btn ghost" onclick="goPrevious()">← ย้อนกลับ</button>
+      <button class="btn" onclick="restartSameSet()">ฝึกชุดนี้อีกครั้ง</button>
+      <button class="btn secondary" onclick="goLanding()">เลือกชุดอื่น</button>
+    </div>
+  </div>`;
+}
+};
+
+function reviewItems(part){
+  return part.items.map((item,i)=>{
+    const key = `${state.partIdx}-${i}`;
+    const rec = state.recordings[key];
+    return `<div class="review-item">
+      <div class="review-q">${i+1}. ${item.q}</div>
+      ${rec? `<div class="review-audio"><audio controls src="${rec}"></audio></div>` : `<div class="rec-hint">(ไม่มีการอัดเสียงสำหรับข้อนี้)</div>`}
+      <div class="model"><div class="lbl">ตัวอย่างคำตอบ</div><p>${item.model}</p></div>
+      <ul class="tips">${item.tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+      <div class="vocab">${item.vocab.map(v=>`<span>${v}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+}
+function reviewExtended(part){
+  const key = `${state.partIdx}-ext`;
+  const rec = state.recordings[key];
+  return `<div class="review-item">
+    <div class="review-q">${part.subquestions.map((q,i)=>`${i+1}. ${q}`).join('<br>')}</div>
+    ${rec? `<div class="review-audio"><audio controls src="${rec}"></audio></div>` : `<div class="rec-hint">(ไม่มีการอัดเสียงสำหรับข้อนี้)</div>`}
+    <div class="model"><div class="lbl">ตัวอย่างคำตอบ (รวม 3 ข้อ)</div><p>${part.model}</p></div>
+    <ul class="tips">${part.tips.map(t=>`<li>${t}</li>`).join('')}</ul>
+    <div class="vocab">${part.vocab.map(v=>`<span>${v}</span>`).join('')}</div>
+  </div>`;
+}
+
+function recPanel(seconds, isPrep){
+  return `<div class="rec-panel">
+    <button class="btn ghost small" id="prevBtn" onclick="goPrevious()" style="margin-bottom:12px;">← ย้อนกลับ</button>
+    <div class="rec-state" id="recState">${isPrep? 'กำลังเตรียมตัว' : 'พร้อมเริ่มอัด'}</div>
+    <div class="timer-ring" id="ring"><div class="timer-num" id="timeNum">${seconds}</div></div>
+    <div class="wave" id="wave">${Array.from({length:14}).map(()=>'<span></span>').join('')}</div>
+    <div class="rec-hint" id="recHint">${isPrep? 'ใช้เวลานี้จดโน้ตสั้น ๆ' : 'กดปุ่มเพื่อเริ่มพูด'}</div>
+    <div class="rec-btnrow">
+      ${isPrep
+        ? `<button class="btn" id="primaryBtn" onclick="skipItem()">เริ่มตอบเลย (ข้ามเวลาเตรียม)</button>`
+        : `<button class="btn" id="primaryBtn" onclick="handlePrimary()">เริ่มพูด</button>
+           <button class="btn ghost small" id="skipBtn" onclick="skipItem()">ข้ามข้อนี้ ไม่บันทึกเสียง ➜</button>`
+      }
+    </div>
+    <div class="mic-note" id="micNote"></div>
+  </div>`;
+}
+
+/* ============================= FLOW CONTROL ============================= */
+function pickSet(k){ state.setKey=k; render(); }
+function startTest(){ state.partIdx=0; state.itemIdx=0; state.recordings={}; state.screen='partIntro'; render(); }
+function beginPart(){
+  const part = SETS[state.setKey].parts[state.partIdx];
+  state.itemIdx=0;
+  state.phase = part.kind==='extended' ? 'prep' : 'record';
+  state.screen='record';
+  render();
+}
+function goLanding(){ state.screen='landing'; state.setKey=null; render(); }
+function restartSameSet(){ startTest(); }
+
+function nextPart(){
+  if(state.partIdx<3){ state.partIdx++; state.screen='partIntro'; render(); }
+  else { state.screen='summary'; render(); }
+}
+
+// "Previous" — step back one screen from wherever the user currently is,
+// safely discarding any timer/recording in progress along the way.
+function goPrevious(){
+  clearInterval(timerHandle); clearInterval(waveHandle);
+  if(mediaRecorder && mediaRecorder.state==='recording'){
+    discardOnStop = true;
+    try{ mediaRecorder.stop(); }catch(e){}
+  }
+  if(mediaStream){ try{ mediaStream.getTracks().forEach(t=>t.stop()); }catch(e){} }
+
+  if(state.screen==='partIntro'){
+    if(state.partIdx>0){ state.partIdx--; state.screen='review'; }
+    else { state.screen='landing'; state.setKey=null; }
+    render(); return;
+  }
+  if(state.screen==='record'){
+    const part = SETS[state.setKey].parts[state.partIdx];
+    if(part.kind==='extended'){
+      if(state.phase==='record'){ state.phase='prep'; render(); return; }
+      state.screen='partIntro'; render(); return;
+    }
+    if(state.itemIdx>0){ state.itemIdx--; render(); return; }
+    state.screen='partIntro'; render(); return;
+  }
+  if(state.screen==='review'){
+    const part = SETS[state.setKey].parts[state.partIdx];
+    if(part.kind==='extended'){ state.phase='record'; state.screen='record'; render(); return; }
+    state.itemIdx = part.items.length-1; state.screen='record'; render(); return;
+  }
+  if(state.screen==='summary'){
+    state.partIdx=3; state.screen='review'; render(); return;
+  }
+}
+
+function advanceAfterRecording(blobUrl){
+  const part = SETS[state.setKey].parts[state.partIdx];
+  if(part.kind==='extended'){
+    if(state.phase==='prep'){
+      state.phase='record';
+      state.screen='record';
+      render();
+      return;
+    } else {
+      state.recordings[`${state.partIdx}-ext`] = blobUrl;
+      state.screen='review'; render(); return;
+    }
+  }
+  state.recordings[`${state.partIdx}-${state.itemIdx}`] = blobUrl;
+  if(state.itemIdx < part.items.length-1){
+    state.itemIdx++; render();
+  } else {
+    state.screen='review'; render();
+  }
+}
+
+/* ============================= TIMER + RECORDING ============================= */
+function afterRender(){
+  clearInterval(timerHandle); clearInterval(waveHandle);
+  if(state.screen!=='record') return;
+  const part = SETS[state.setKey].parts[state.partIdx];
+  const isExtPrep = part.kind==='extended' && state.phase==='prep';
+  const seconds = part.kind==='extended' ? (state.phase==='prep'?part.prepTime:part.answerTime) : part.items[state.itemIdx].time;
+  let remaining = seconds;
+  let started = isExtPrep; // prep counts down automatically without mic
+  const ring = el('ring'), num = el('timeNum'), stateLbl = el('recState'), hint = el('recHint'), btn = el('primaryBtn');
+
+  function tick(){
+    num.textContent = remaining;
+    if(remaining<=0){
+      clearInterval(timerHandle);
+      if(isExtPrep){ advanceAfterRecording(null); }
+      else { stopRecording(); }
+      return;
+    }
+    remaining--;
+  }
+
+  if(isExtPrep){
+    ring.classList.add('live'); stateLbl.textContent='กำลังเตรียมตัว'; stateLbl.classList.add('live');
+    timerHandle = setInterval(tick,1000);
+    return;
+  }
+
+  window.__startRecording = function(){
+    btn.disabled = true; btn.textContent='กำลังอัด...';
+    ring.classList.add('live'); stateLbl.textContent='กำลังอัดเสียง'; stateLbl.classList.add('live');
+    hint.textContent='กดปุ่มด้านล่างเมื่อพูดจบก่อนหมดเวลาได้';
+    timerHandle = setInterval(tick,1000);
+    beginMic(remaining);
+  };
+}
+
+function handlePrimary(){
+  if(window.__startRecording) window.__startRecording();
+}
+
+function beginMic(seconds){
+  const btn = el('primaryBtn'), skip = el('skipBtn');
+  const finishLater = ()=>{
+    btn.textContent='จบและไปข้อต่อไป';
+    btn.onclick = stopRecording;
+    if(skip) skip.textContent='ยกเลิก ไม่บันทึกเสียงนี้ ➜';
+  };
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    micOK=false; el('micNote').textContent='เบราว์เซอร์นี้ไม่รองรับการอัดเสียง — ฝึกพูดตามเวลาไปก่อนแล้วดูเฉลยได้เลย';
+    finishLater(); return;
+  }
+  navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+    micOK=true; mediaStream=stream;
+    mediaChunks=[];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = e=>mediaChunks.push(e.data);
+    mediaRecorder.onstop = ()=>{
+      const blob = new Blob(mediaChunks, {type:'audio/webm'});
+      const url = discardOnStop ? null : URL.createObjectURL(blob);
+      discardOnStop = false;
+      stream.getTracks().forEach(t=>t.stop());
+      advanceAfterRecording(url);
+    };
+    mediaRecorder.start();
+    startWave();
+    finishLater();
+  }).catch(()=>{
+    micOK=false; el('micNote').textContent='ไม่ได้รับอนุญาตให้ใช้ไมโครโฟนในหน้าต่างนี้ — ฝึกพูดออกเสียงตามเวลาได้เลย แล้วดูเฉลยตอนจบข้อ';
+    finishLater();
+  });
+}
+
+function startWave(){
+  const bars = document.querySelectorAll('#wave span');
+  waveHandle = setInterval(()=>{
+    bars.forEach(b=> b.style.height = (4+Math.random()*20)+'px');
+  },140);
+}
+
+// "Finish" — stop early but keep whatever was recorded so far, then move on.
+function stopRecording(){
+  clearInterval(timerHandle); clearInterval(waveHandle);
+  discardOnStop = false;
+  if(mediaRecorder && mediaRecorder.state==='recording'){
+    mediaRecorder.stop();
+  } else {
+    advanceAfterRecording(null);
+  }
+}
+
+// "Skip" — jump to the next item immediately, at any point (prep, before
+// recording starts, or mid-recording). Any in-progress recording is discarded.
+function skipItem(){
+  clearInterval(timerHandle); clearInterval(waveHandle);
+  if(mediaRecorder && mediaRecorder.state==='recording'){
+    discardOnStop = true;
+    mediaRecorder.stop();
+  } else {
+    if(mediaStream){ mediaStream.getTracks().forEach(t=>t.stop()); }
+    advanceAfterRecording(null);
+  }
+}
+
+render();
+</script>
+</body>
+</html>
